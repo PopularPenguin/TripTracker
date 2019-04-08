@@ -12,7 +12,7 @@ class Trip() {
     var year = 2000
     var description = ""
     @ColumnInfo(name = "total_distance") var totalDistance = 0.0
-    var points: List<Pair<Float, Float>> = emptyList()
+    //var points: List<Pair<Float, Float>> = emptyList() // TypeConverter needed
 
     constructor(
         id: Int,
@@ -29,6 +29,6 @@ class Trip() {
         this.month = month
         this.year = year
         totalDistance = distance
-        points = p
+        //points = p
     }
 }

@@ -1,10 +1,9 @@
 package com.popularpenguin.triptracker
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -15,13 +14,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        val navigator = ScreenNavigator(supportFragmentManager)
+        navigator.loadTrips()
+
         // TODO: Create application composition root for db and insert this line
         // val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "tripdb").build()
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+        fab.setOnClickListener { navigator.loadMap() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -12,6 +12,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.popularpenguin.triptracker.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MapFragment: Fragment(), OnMapReadyCallback {
 
@@ -23,21 +27,34 @@ class MapFragment: Fragment(), OnMapReadyCallback {
         }
     }
 
+    private lateinit var mLocation: UserLocation
     private lateinit var mMap: GoogleMap
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_map, container, false)
-
-        return view
+        return inflater.inflate(R.layout.fragment_map, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        mLocation = UserLocation(requireContext())
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
 
         mapFragment.getMapAsync(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        mLocation.startLocationUpdates()
+    }
+
+    override fun onPause() {
+        mLocation.stopLocationUpdates()
+
+        super.onPause()
+    }
+
     override fun onMapReady(map: GoogleMap) {
+        // TODO: Test functionality, move out of class to a new TripTracker class
         mMap = map
 
         // Add a marker in Sydney, Australia, and move the camera
@@ -46,6 +63,12 @@ class MapFragment: Fragment(), OnMapReadyCallback {
             position(sydneyLatLng)
             title("Marker in Sydney")
         })
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydneyLatLng))
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydneyLatLng))
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(11000L)
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(mLocation.latitude, mLocation.longitude)))
+        }
+
     }
 }

@@ -3,6 +3,7 @@ package com.popularpenguin.triptracker.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.android.gms.maps.model.LatLng
 
 @Entity
 class Trip() {
@@ -11,8 +12,8 @@ class Trip() {
     var month = 1
     var year = 2000
     var description = ""
+    var points = ""
     @ColumnInfo(name = "total_distance") var totalDistance = 0.0
-    //var points: List<Pair<Float, Float>> = emptyList() // TypeConverter needed
 
     constructor(
         id: Int,
@@ -20,15 +21,20 @@ class Trip() {
         day: Int,
         month: Int,
         year: Int,
-        distance: Double,
-        p: List<Pair<Float, Float>>
+        points: String,
+        distance: Double
     ): this() {
         uid = id
         description = desc
         this.day = day
         this.month = month
         this.year = year
+        this.points = points
         totalDistance = distance
-        //points = p
     }
+}
+
+fun Trip.getLatLng(points: String): List<LatLng> {
+
+    return listOf(LatLng(0.0, 0.0)) // TODO: Conversion
 }

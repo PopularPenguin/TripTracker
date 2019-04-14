@@ -1,4 +1,4 @@
-package com.popularpenguin.triptracker
+package com.popularpenguin.triptracker.common
 
 import android.app.Activity
 import android.content.Context
@@ -10,6 +10,7 @@ import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
+import com.popularpenguin.triptracker.R
 
 class PermissionValidator(private val activity: Activity) {
 

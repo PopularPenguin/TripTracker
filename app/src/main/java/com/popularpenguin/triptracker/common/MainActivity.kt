@@ -14,11 +14,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        // check permissions
-        PermissionValidator(this).requestPermissions()
-
         // Set the fragment to the first screen of the app
         ScreenNavigator(supportFragmentManager).loadTripList()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // check permissions
+        PermissionValidator(this).requestPermissions()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

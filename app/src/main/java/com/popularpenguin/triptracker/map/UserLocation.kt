@@ -13,7 +13,7 @@ class UserLocation(context: Context) {
     }
 
     interface UserLocationListener {
-        fun onLocationUpdated(latLng: List<LatLng>, zoom: Float)
+        fun onLocationUpdated(latLng: LatLng, zoom: Float)
     }
 
     private var userLocationListeners = mutableListOf<UserLocationListener>()
@@ -30,9 +30,9 @@ class UserLocation(context: Context) {
         override fun onLocationResult(locationResult: LocationResult?) {
             locationResult ?: return
 
-            val latLng = mutableListOf<LatLng>()
+            val location = locationResult.lastLocation
+            val latLng = LatLng(location.latitude, location.longitude)
 
-            locationResult.locations.forEach { latLng.add(LatLng(it.latitude, it.longitude)) }
             userLocationListeners.forEach { it.onLocationUpdated(latLng, ZOOM) }
         }
     }

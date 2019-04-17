@@ -7,10 +7,8 @@ import com.google.android.gms.maps.model.LatLng
 
 @Entity
 class Trip() {
-    @PrimaryKey var uid = 0
-    var day = 1
-    var month = 1
-    var year = 2000
+    @PrimaryKey(autoGenerate = true) var uid = 0
+    var date = 0L
     var description = ""
     var points = ""
     @ColumnInfo(name = "total_distance") var totalDistance = 0.0
@@ -18,23 +16,26 @@ class Trip() {
     constructor(
         id: Int,
         desc: String,
-        day: Int,
-        month: Int,
-        year: Int,
+        date: Long,
         points: String,
         distance: Double
     ): this() {
         uid = id
         description = desc
-        this.day = day
-        this.month = month
-        this.year = year
+        this.date = date
         this.points = points
         totalDistance = distance
     }
+
+
 }
 
 fun Trip.getLatLng(points: String): List<LatLng> {
 
     return listOf(LatLng(0.0, 0.0)) // TODO: Conversion
+}
+
+fun Trip.latLngToString(latLngList: List<LatLng>): String {
+
+    return "" // TODO: Conversion
 }

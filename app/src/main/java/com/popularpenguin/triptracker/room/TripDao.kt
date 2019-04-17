@@ -14,14 +14,8 @@ interface TripDao {
     @Query("SELECT * FROM trip WHERE uid IN (:userIds)")
     suspend fun loadAllByIds(userIds: IntArray): List<Trip>
 
-    @Query("SELECT * FROM trip WHERE day IN (:day) AND month IN (:month) AND year IN (:year)")
-    suspend fun loadByDayMonthYear(day: Int, month: Int, year: Int): List<Trip>
-
-    @Query("SELECT * FROM trip WHERE month IN (:month) AND year IN (:year)")
-    suspend fun loadByMonthYear(month: Int, year: Int): List<Trip>
-
-    @Query("SELECT * FROM trip WHERE year IN (:year)")
-    suspend fun loadByYear(year: Int): List<Trip>
+    @Insert
+    suspend fun insert(trip: Trip)
 
     @Insert
     suspend fun insertAll(vararg trips: Trip)

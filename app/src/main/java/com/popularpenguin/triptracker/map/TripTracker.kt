@@ -1,5 +1,8 @@
 package com.popularpenguin.triptracker.map
 
+import android.util.Log
+import android.view.View
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -8,20 +11,30 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
 import com.popularpenguin.triptracker.R
+import com.popularpenguin.triptracker.data.Trip
+import com.popularpenguin.triptracker.data.latLngToString
 import com.popularpenguin.triptracker.room.AppDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import java.util.*
 
 /** Class to combine the map and location functions to draw a trip session */
 class TripTracker(fragment: Fragment) : OnMapReadyCallback, UserLocation.UserLocationListener {
 
     private val dao = AppDatabase.get(fragment.requireActivity().applicationContext).dao()
-    private val jobs = mutableListOf<Job>()
+    private val jobList = mutableListOf<Job>()
     private val location = UserLocation(fragment.requireContext())
+    private val locationList = mutableListOf<LatLng>()
+    private val notification = TrackerNotification(fragment.requireContext())
 
     private lateinit var map: GoogleMap
 
+    private var distance = 0.0
     private var isMapReady = false
     private var isRefreshed = true
+    private var isRunning = false
 
     init {
         val mapFragment = fragment.childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -30,6 +43,8 @@ class TripTracker(fragment: Fragment) : OnMapReadyCallback, UserLocation.UserLoc
     }
 
     fun onResume() {
+        if (!isRunning) return
+
         location.apply {
             addListener(this@TripTracker)
             startLocationUpdates()
@@ -37,26 +52,88 @@ class TripTracker(fragment: Fragment) : OnMapReadyCallback, UserLocation.UserLoc
     }
 
     fun onPause() {
+        if (!isRunning) return
+
         location.apply {
             removeListener(this@TripTracker)
             stopLocationUpdates()
         }
+
+        jobList.forEach { it.cancel() }
     }
 
-    override fun onLocationUpdated(latLng: List<LatLng>, zoom: Float) {
+    fun addControlListener(controlView: View) {
+        controlView.setOnClickListener {
+            if (!isRunning) {
+                location.apply {
+                    addListener(this@TripTracker)
+                    startLocationUpdates()
+                }
+
+                notification.createNotification()
+
+                if (it is Button) {
+                    it.text = "Stop"
+                }
+            }
+
+            if (isRunning) {
+                location.apply {
+                    removeListener(this@TripTracker)
+                    stopLocationUpdates()
+
+                    // TODO: Store location info inside the db
+                    commitToDatabase()
+                }
+
+                notification.cancelNotification()
+
+                it.visibility = View.GONE
+            }
+
+            isRunning = !isRunning
+        }
+    }
+
+    private fun commitToDatabase() {
+        val job = GlobalScope.launch (Dispatchers.IO) {
+            val trip = Trip().apply {
+                date = Date().time
+                description = "Testing..."
+                points = this.latLngToString(locationList)
+                totalDistance = this@TripTracker.distance
+            }
+
+            dao.insert(trip)
+
+            Log.d("TripTracker", "Number of trips in db = ${dao.getAll().size}")
+        }
+
+        job.start()
+        jobList.add(job)
+    }
+
+    override fun onLocationUpdated(latLng: LatLng, zoom: Float) {
         if (!isMapReady) return
 
+        locationList.add(latLng)
+
         map.apply {
-            animateCamera(CameraUpdateFactory.newLatLngZoom(latLng.last(), zoom))
-            if (latLng.size > 1) {
+            animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
+            if (locationList.size > 1) {
+                val polylineOptions = PolylineOptions().apply {
+                    width(5.0f)
+                }
                 // TripTracker has been destroyed and recreated: Add all lines
                 if (isRefreshed) {
-                    addPolyline(PolylineOptions().addAll(latLng))
+                    addPolyline(polylineOptions.addAll(locationList))
                 } else {
-                    addPolyline(PolylineOptions().add(latLng.last()))
+                    addPolyline(polylineOptions.add(locationList[locationList.size - 2], latLng))
                 }
             }
         }
+
+        Log.d("TripTracker", "locationList.size = ${locationList.size}")
 
         isRefreshed = false
     }

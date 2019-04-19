@@ -12,7 +12,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.data.Trip
-import com.popularpenguin.triptracker.data.latLngToString
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -82,7 +81,6 @@ class TripTracker(fragment: Fragment) : OnMapReadyCallback, UserLocation.UserLoc
                     removeListener(this@TripTracker)
                     stopLocationUpdates()
 
-                    // TODO: Store location info inside the db
                     commitToDatabase()
                 }
 
@@ -100,7 +98,7 @@ class TripTracker(fragment: Fragment) : OnMapReadyCallback, UserLocation.UserLoc
             val trip = Trip().apply {
                 date = Date().time
                 description = "Testing..."
-                points = this.latLngToString(locationList)
+                points = locationList
                 totalDistance = this@TripTracker.distance
             }
 

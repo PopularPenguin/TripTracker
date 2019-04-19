@@ -32,9 +32,8 @@ class TrackerNotification(private val context: Context) {
             Notification.Builder(context)
         }
 
-        // TODO: Use string resources and create an icon for the notification
-        val notification = builder.setContentTitle("TripTracker")
-            .setContentText("Tracker is running")
+        val notification = builder.setContentTitle(resources.getString(R.string.notification_title))
+            .setContentText(resources.getString(R.string.notification_content))
             .setSmallIcon(R.mipmap.ic_launcher_round)
             .build()
 

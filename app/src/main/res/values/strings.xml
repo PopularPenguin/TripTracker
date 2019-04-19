@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Trip Tracker</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Notification -->
+    <string name="notification_title">Trip Tracker</string>
+    <string name="notification_content">Tracker is running</string>
 </resources>

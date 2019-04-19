@@ -11,8 +11,11 @@ interface TripDao {
     @Query("SELECT * FROM trip")
     suspend fun getAll(): List<Trip>
 
-    @Query("SELECT * FROM trip WHERE uid IN (:userIds)")
-    suspend fun loadAllByIds(userIds: IntArray): List<Trip>
+    @Query("SELECT * FROM trip WHERE uid IS (:uid)")
+    suspend fun loadById(uid: Int): Trip
+
+    @Query("SELECT * FROM trip WHERE uid IN (:uids)")
+    suspend fun loadAllByIds(uids: IntArray): List<Trip>
 
     @Insert
     suspend fun insert(trip: Trip)

@@ -2,9 +2,22 @@ package com.popularpenguin.triptracker.room
 
 import androidx.room.TypeConverter
 import com.google.android.gms.maps.model.LatLng
+import java.util.*
 
 class Converters {
     companion object {
+        @TypeConverter
+        @JvmStatic
+        fun fromDate(date: Date): Long {
+            return date.time
+        }
+
+        @TypeConverter
+        @JvmStatic
+        fun toDate(unixTime: Long): Date {
+            return Date(unixTime)
+        }
+
         @TypeConverter
         @JvmStatic
         fun fromLatLng(latLngList: List<LatLng>): String {

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.ScreenNavigator
+import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.android.synthetic.main.fragment_trip_list.*
 import kotlinx.coroutines.Dispatchers
@@ -21,9 +22,7 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
 
     companion object {
         fun newInstance(): TripListFragment {
-            val fragment = TripListFragment()
-
-            return fragment
+            return TripListFragment()
         }
     }
 
@@ -57,7 +56,9 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
         }
     }
 
-    override fun onClick(position: Int) {
-        Toast.makeText(requireContext(), "Position = $position", Toast.LENGTH_LONG).show()
+    override fun onClick(uid: Int) {
+        Toast.makeText(requireContext(), "id = $uid", Toast.LENGTH_LONG).show()
+
+        ScreenNavigator(requireActivity().supportFragmentManager).loadSingleTrip(uid)
     }
 }

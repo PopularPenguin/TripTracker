@@ -12,7 +12,7 @@ class TripListAdapter(private val tripList: List<Trip>, private val handler: OnC
     RecyclerView.Adapter<TripListAdapter.TripViewHolder>() {
 
     interface OnClick {
-        fun onClick(position: Int)
+        fun onClick(uid: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TripViewHolder {
@@ -43,7 +43,7 @@ class TripListAdapter(private val tripList: List<Trip>, private val handler: OnC
         }
 
         override fun onClick(view: View) {
-            handler.onClick(adapterPosition)
+            handler.onClick(tripList[adapterPosition].uid)
         }
     }
 }

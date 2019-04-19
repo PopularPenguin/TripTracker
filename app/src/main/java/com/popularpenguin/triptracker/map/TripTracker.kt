@@ -30,7 +30,7 @@ class TripTracker(fragment: Fragment) : OnMapReadyCallback, UserLocation.UserLoc
 
     private lateinit var map: GoogleMap
 
-    private var distance = 0.0
+    private var distance = 0.0 // TODO: Compute distance
     private var isMapReady = false
     private var isRefreshed = true
     private var isRunning = false
@@ -96,15 +96,13 @@ class TripTracker(fragment: Fragment) : OnMapReadyCallback, UserLocation.UserLoc
     private fun commitToDatabase() {
         val job = GlobalScope.launch (Dispatchers.IO) {
             val trip = Trip().apply {
-                date = Date().time
+                date = Date()
                 description = "Testing..."
                 points = locationList
                 totalDistance = this@TripTracker.distance
             }
 
             dao.insert(trip)
-
-            Log.d("TripTracker", "Number of trips in db = ${dao.getAll().size}")
         }
 
         job.start()

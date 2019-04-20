@@ -36,14 +36,17 @@ class Converters {
             if (str.isEmpty()) {
                 return listOf(LatLng(0.0, 0.0))
             }
+
             val latLngList = mutableListOf<LatLng>()
             val points = str.split(";")
 
             points.forEach {
-                val latLngStrings = it.split(",")
-                val latLng = LatLng(latLngStrings[0].toDouble(), latLngStrings[1].toDouble())
+                if (it.isNotEmpty()) {
+                    val latLngStrings = it.split(",")
+                    val latLng = LatLng(latLngStrings[0].toDouble(), latLngStrings[1].toDouble())
 
-                latLngList.add(latLng)
+                    latLngList.add(latLng)
+                }
             }
 
             return latLngList

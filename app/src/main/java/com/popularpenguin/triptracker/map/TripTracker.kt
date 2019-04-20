@@ -11,6 +11,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
 import com.popularpenguin.triptracker.R
+import com.popularpenguin.triptracker.common.ScreenNavigator
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +21,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 /** Class to combine the map and location functions to draw a trip session */
-class TripTracker(fragment: Fragment) : OnMapReadyCallback, UserLocation.UserLocationListener {
+class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLocation.UserLocationListener {
 
     private val dao = AppDatabase.get(fragment.requireActivity().applicationContext).dao()
     private val jobList = mutableListOf<Job>()
@@ -81,23 +82,41 @@ class TripTracker(fragment: Fragment) : OnMapReadyCallback, UserLocation.UserLoc
                     removeListener(this@TripTracker)
                     stopLocationUpdates()
 
-                    commitToDatabase()
+                    showSaveDialog()
                 }
-
-                notification.cancelNotification()
-
-                it.visibility = View.GONE
             }
 
             isRunning = !isRunning
         }
     }
 
-    private fun commitToDatabase() {
+    private fun showSaveDialog() {
+        val dialog = SaveDialog(fragment.requireContext()).apply {
+            setCancelButtonOnClickListener {
+                location.apply {
+                    addListener(this@TripTracker)
+                    startLocationUpdates()
+                }
+
+                this.dismiss()
+            }
+            setSaveButtonOnClickListener {
+                notification.cancelNotification()
+
+                commitToDatabase(this.getDescription())
+
+                this.dismiss()
+
+                ScreenNavigator(fragment.activity!!.supportFragmentManager).loadTripList()
+            }
+        }.show()
+    }
+
+    private fun commitToDatabase(dialogDescription: String) {
         val job = GlobalScope.launch (Dispatchers.IO) {
             val trip = Trip().apply {
                 date = Date()
-                description = "Testing..."
+                description = dialogDescription
                 points = locationList
                 totalDistance = this@TripTracker.distance
             }
@@ -107,6 +126,10 @@ class TripTracker(fragment: Fragment) : OnMapReadyCallback, UserLocation.UserLoc
 
         job.start()
         jobList.add(job)
+    }
+
+    private fun computeTotalDistance() {
+        // TODO: Create function to compute the total latLng distance
     }
 
     override fun onLocationUpdated(latLng: LatLng, zoom: Float) {

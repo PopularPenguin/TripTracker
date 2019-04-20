@@ -2,6 +2,11 @@
     <string name="app_name">Trip Tracker</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Dialog Save -->
+    <string name="text_hint">Trip description</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_save">Save Trip</string>
+
     <!-- Notification -->
     <string name="notification_title">Trip Tracker</string>
     <string name="notification_content">Tracker is running</string>

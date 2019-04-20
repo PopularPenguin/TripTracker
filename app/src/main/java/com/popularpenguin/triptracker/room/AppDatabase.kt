@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.popularpenguin.triptracker.data.Trip
 
-@Database(entities = [Trip::class], version = 1)
+@Database(entities = [Trip::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     companion object {

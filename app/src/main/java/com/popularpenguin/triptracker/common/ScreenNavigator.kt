@@ -47,5 +47,6 @@ class ScreenNavigator(private val fm: FragmentManager) {
         fm.beginTransaction()
             .replace(R.id.fragment_container, TripListFragment.newInstance())
             .commit()
+        fm.popBackStack()
     }
 }

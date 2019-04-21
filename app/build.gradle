@@ -41,6 +41,7 @@ dependencies {
     // Google MapTracker
     implementation "com.google.android.gms:play-services-location:16.0.0"
     implementation "com.google.android.gms:play-services-maps:16.1.0"
+    implementation "com.google.maps.android:android-maps-utils:0.4"
 
     // Room
     def room_version = "2.1.0-alpha06"
@@ -50,5 +51,5 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0-alpha3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha03'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha04'
 }

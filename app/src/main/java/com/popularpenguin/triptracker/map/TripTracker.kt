@@ -10,6 +10,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.ScreenNavigator
 import com.popularpenguin.triptracker.data.Trip
@@ -31,7 +32,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
     private lateinit var map: GoogleMap
 
-    private var distance = 0.0 // TODO: Compute distance
+    private var distance = 0.0
     private var isMapReady = false
     private var isRefreshed = true
     private var isRunning = false
@@ -128,8 +129,10 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         jobList.add(job)
     }
 
-    private fun computeTotalDistance() {
-        // TODO: Create function to compute the total latLng distance
+    private fun computeTotalDistance(): Double {
+        val totalDistance = SphericalUtil.computeLength(locationList)
+
+        return totalDistance * 0.000621371 // meters to miles
     }
 
     override fun onLocationUpdated(latLng: LatLng, zoom: Float) {
@@ -151,6 +154,8 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 }
             }
         }
+
+        distance = computeTotalDistance()
 
         Log.d("TripTracker", "locationList.size = ${locationList.size}")
 

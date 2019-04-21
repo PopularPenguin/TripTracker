@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.android.gms.maps.model.LatLng
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Entity
@@ -26,5 +28,15 @@ class Trip() {
         this.date = date
         this.points = points
         totalDistance = distance
+    }
+
+    fun getFormattedDate(): String {
+        return try {
+            val formatter = SimpleDateFormat("MMMM dd, yyyy h:mm a", Locale.US)
+
+            formatter.format(date)
+        } catch (e: ParseException) {
+            "Invalid date"
+        }
     }
 }

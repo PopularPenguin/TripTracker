@@ -37,8 +37,8 @@ class TripListAdapter(private val tripList: List<Trip>, private val handler: OnC
 
         fun bind(trip: Trip) {
             with (itemView) {
-                descriptionView.text = trip.description
-                dateView.text = "${trip.date}"
+                descriptionView.text = "${trip.description}, ${trip.totalDistance} miles"
+                dateView.text = trip.getFormattedDate()
             }
         }
 

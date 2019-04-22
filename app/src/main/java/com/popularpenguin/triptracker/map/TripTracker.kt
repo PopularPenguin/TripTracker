@@ -74,7 +74,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 notification.createNotification()
 
                 if (it is Button) {
-                    it.text = "Stop"
+                    it.text = fragment.getString(R.string.tracker_stop)
                 }
             }
 
@@ -88,6 +88,14 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
             }
 
             isRunning = !isRunning
+        }
+    }
+
+    fun addZoomListener(zoomView: View) {
+        zoomView.setOnClickListener {
+            if (isRunning) {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(locationList.last(), UserLocation.ZOOM))
+            }
         }
     }
 
@@ -127,6 +135,8 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
         job.start()
         jobList.add(job)
+
+        Log.d("TripTracker", "Total distance = $distance")
     }
 
     private fun computeTotalDistance(): Double {

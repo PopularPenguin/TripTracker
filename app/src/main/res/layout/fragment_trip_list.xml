@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/lightBrown">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -15,13 +16,15 @@
             android:id="@+id/tripRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:elevation="@dimen/recycler_elevation"
+            android:scrollbars="vertical"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/fab_size"
+            android:layout_height="@dimen/fab_size"
+            android:elevation="@dimen/fab_elevation"
+            android:translationZ="@dimen/fab_z"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             app:srcCompat="@android:drawable/ic_input_add" />
@@ -32,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@android:color/holo_red_dark"
+        android:background="@color/darkBrown"
         android:gravity="center"
         android:text="Search bar"
         android:textSize="24sp" />

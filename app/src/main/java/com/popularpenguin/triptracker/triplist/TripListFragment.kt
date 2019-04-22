@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.popularpenguin.triptracker.R
@@ -44,7 +45,7 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
                 AppDatabase.get(requireContext()).dao().getAll()
             }
 
-            val viewManager = LinearLayoutManager(requireContext())
+            val viewManager = GridLayoutManager(requireContext(), 2)
             val viewAdapter = TripListAdapter(tripList, this@TripListFragment)
 
             val recyclerView = requireActivity().findViewById<RecyclerView>(R.id.tripRecyclerView).apply {

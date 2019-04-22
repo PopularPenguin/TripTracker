@@ -1,6 +1,20 @@
 <resources>
+    <!-- General -->
+    <dimen name="app_bar_elevation">4dp</dimen>
+    <dimen name="recycler_elevation">2dp</dimen>
+
+    <!-- List -->
+    <dimen name="card_corner_radius">6dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
+    <dimen name="card_margin">4dp</dimen>
+
+    <dimen name="fab_elevation">6dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_size">54dp</dimen>
+    <dimen name="fab_z">6dp</dimen>
+
+    <!-- Tracker -->
     <dimen name="dialog_width">300dp</dimen>
     <dimen name="dialog_height">240dp</dimen>
 
-    <dimen name="fab_margin">16dp</dimen>
 </resources>

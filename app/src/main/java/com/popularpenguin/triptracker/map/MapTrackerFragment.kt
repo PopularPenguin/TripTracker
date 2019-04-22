@@ -27,6 +27,7 @@ class MapTrackerFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         tripTracker = TripTracker(this).apply {
             addControlListener(trackerControlButton)
+            addZoomListener(trackerZoomButton)
         }
     }
 

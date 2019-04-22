@@ -10,4 +10,9 @@
     <!-- Notification -->
     <string name="notification_title">Trip Tracker</string>
     <string name="notification_content">Tracker is running</string>
+
+    <!-- Tracker -->
+    <string name="tracker_start">Start</string>
+    <string name="tracker_stop">Stop</string>
+    <string name="tracker_zoom">Zoom</string>
 </resources>

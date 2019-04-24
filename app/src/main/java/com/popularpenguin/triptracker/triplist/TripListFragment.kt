@@ -62,4 +62,13 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
 
         ScreenNavigator(requireActivity().supportFragmentManager).loadSingleTrip(uid)
     }
+
+    override fun onLongClick(adapter: TripListAdapter, position: Int, trip: Trip) {
+        // TODO: Create a dialog before deleting the trip
+        GlobalScope.launch(Dispatchers.IO) {
+            AppDatabase.get(requireContext()).dao().delete(trip)
+
+            adapter.notifyItemRemoved(position)
+        }
+    }
 }

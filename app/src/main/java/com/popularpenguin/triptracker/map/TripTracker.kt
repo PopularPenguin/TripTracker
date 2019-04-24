@@ -3,6 +3,7 @@ package com.popularpenguin.triptracker.map
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -10,6 +11,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.RoundCap
+import com.google.android.material.snackbar.Snackbar
 import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.ScreenNavigator
@@ -136,7 +139,11 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         job.start()
         jobList.add(job)
 
-        Log.d("TripTracker", "Total distance = $distance")
+        Toast.makeText(
+                fragment.requireContext(),
+                fragment.getString(R.string.tracker_save),
+                Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun computeTotalDistance(): Double {

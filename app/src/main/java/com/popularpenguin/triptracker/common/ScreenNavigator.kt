@@ -29,7 +29,7 @@ class ScreenNavigator(private val fm: FragmentManager) {
     fun loadMapTracker() {
         screen = Screen.MapTracker
         fm.beginTransaction()
-            .replace(R.id.fragment_container, MapTrackerFragment.newInstance() as Fragment)
+            .add(R.id.fragment_container, MapTrackerFragment.newInstance() as Fragment)
             .addToBackStack(null)
             .commit()
     }
@@ -37,7 +37,7 @@ class ScreenNavigator(private val fm: FragmentManager) {
     fun loadSingleTrip(uid: Int) {
         screen = Screen.SingleTrip
         fm.beginTransaction()
-                .replace(R.id.fragment_container, SingleTripFragment.newInstance(uid))
+                .add(R.id.fragment_container, SingleTripFragment.newInstance(uid))
                 .addToBackStack(null)
                 .commit()
     }

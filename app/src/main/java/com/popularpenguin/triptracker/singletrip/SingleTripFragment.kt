@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.map.UserLocation
 import com.popularpenguin.triptracker.room.AppDatabase
+import kotlinx.android.synthetic.main.fragment_single_trip_map.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -62,6 +63,10 @@ class SingleTripFragment: Fragment(), OnMapReadyCallback {
                     addAll(trip.points)
                 })
                 animateCamera(CameraUpdateFactory.newLatLngZoom(trip.points[0], UserLocation.ZOOM))
+            }
+
+            singleTripZoomFab.setOnClickListener {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(trip.points[0], UserLocation.ZOOM))
             }
         }
     }

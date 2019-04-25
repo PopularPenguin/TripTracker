@@ -77,9 +77,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
                 notification.createNotification()
 
-                if (it is Button) {
-                    it.text = fragment.getString(R.string.tracker_stop)
-                }
+                it.setBackgroundColor(fragment.resources.getColor(R.color.transparentRed))
             }
 
             if (isRunning) {

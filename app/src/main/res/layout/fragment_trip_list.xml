@@ -27,6 +27,8 @@
             android:translationZ="@dimen/fab_z"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
+            android:background="@color/black"
+            android:backgroundTint="@color/transparentWhite"
             app:srcCompat="@android:drawable/ic_input_add" />
 
     </FrameLayout>

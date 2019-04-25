@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <fragment
-        android:id="@+id/singleTripMap"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="8" />
+            android:id="@+id/singleTripMap"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@android:color/holo_red_dark">
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/singleTripZoomFab"
+            android:layout_width="@dimen/fab_size_small"
+            android:layout_height="@dimen/fab_size_small"
+            android:elevation="@dimen/fab_elevation"
+            android:translationZ="@dimen/fab_z"
+            android:layout_gravity="top|end"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginTop="120dp"
+            android:backgroundTint="@color/transparentWhite2"
+            app:srcCompat="@android:drawable/ic_input_add"/>
 
-    </FrameLayout>
-
-</LinearLayout>
+</FrameLayout>

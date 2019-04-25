@@ -1,5 +1,6 @@
 package com.popularpenguin.triptracker.map
 
+import android.graphics.Camera
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -158,7 +159,6 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         locationList.add(latLng)
 
         map.apply {
-            animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
             if (locationList.size > 1) {
                 val polylineOptions = PolylineOptions().apply {
                     width(5.0f)
@@ -169,6 +169,10 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 } else {
                     addPolyline(polylineOptions.add(locationList[locationList.size - 2], latLng))
                 }
+            }
+            else {
+                // this is the first location update, so zoom in on the user's location
+                animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
             }
         }
 
@@ -183,6 +187,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         map = googleMap.apply {
             try {
                 isMyLocationEnabled = true
+                uiSettings.isMyLocationButtonEnabled = false
             } catch (e: SecurityException) {
                 e.printStackTrace()
             }

@@ -2,17 +2,23 @@
     <string name="app_name">Trip Tracker</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Dialog Delete -->
+    <string name="dialog_delete_title">Delete Trip</string>
+    <string name="dialog_delete_message">Are you sure you want to delete this trip?</string>
+    <string name="dialog_delete_positive">Delete</string>
+    <string name="dialog_delete_negative">Cancel</string>
+
     <!-- Dialog Save -->
-    <string name="text_hint">Trip description</string>
-    <string name="dialog_cancel">Cancel</string>
-    <string name="dialog_save">Save Trip</string>
+    <string name="text_hint">Trip Description:</string>
+    <string name="dialog_save_cancel">Cancel</string>
+    <string name="dialog_save_save">Save Trip</string>
 
     <!-- Notification -->
     <string name="notification_title">Trip Tracker</string>
     <string name="notification_content">Tracker is running</string>
 
     <!-- Tracker -->
-    <string name="tracker_save">Trip saved</string>
+    <string name="tracker_save">Trip Saved</string>
     <string name="tracker_start">Start</string>
     <string name="tracker_stop">Stop</string>
     <string name="tracker_zoom">Zoom</string>

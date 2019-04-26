@@ -28,7 +28,8 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             android:background="@color/black"
-            android:backgroundTint="@color/transparentWhite"
+            app:backgroundTint="@color/white"
+            app:rippleColor="@color/gray"
             app:srcCompat="@android:drawable/ic_input_add" />
 
     </FrameLayout>

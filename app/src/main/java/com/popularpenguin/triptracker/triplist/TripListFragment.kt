@@ -4,10 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.ScreenNavigator
@@ -46,9 +45,9 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
             }
 
             val viewManager = GridLayoutManager(requireContext(), 2)
-            val viewAdapter = TripListAdapter(tripList, this@TripListFragment)
+            val viewAdapter = TripListAdapter(tripList.toMutableList(), this@TripListFragment)
 
-            val recyclerView = requireActivity().findViewById<RecyclerView>(R.id.tripRecyclerView).apply {
+            requireActivity().findViewById<RecyclerView>(R.id.tripRecyclerView).apply {
                 setHasFixedSize(true)
 
                 layoutManager = viewManager
@@ -58,17 +57,25 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     }
 
     override fun onClick(uid: Int) {
-        Toast.makeText(requireContext(), "id = $uid", Toast.LENGTH_LONG).show()
-
         ScreenNavigator(requireActivity().supportFragmentManager).loadSingleTrip(uid)
     }
 
     override fun onLongClick(adapter: TripListAdapter, position: Int, trip: Trip) {
-        // TODO: Create a dialog before deleting the trip
-        GlobalScope.launch(Dispatchers.IO) {
-            AppDatabase.get(requireContext()).dao().delete(trip)
+        AlertDialog.Builder(requireContext(), R.style.DialogTheme)
+            .setTitle(R.string.dialog_delete_title)
+            .setMessage(R.string.dialog_delete_message)
+            .setPositiveButton(R.string.dialog_delete_positive) { dialog, _ ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    adapter.removeItem(position)
+                    AppDatabase.get(requireContext()).dao().delete(trip)
+                }
 
-            adapter.notifyItemRemoved(position)
-        }
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.dialog_delete_negative) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setIcon(R.drawable.ic_launcher_foreground) // TODO: Change to app icon
+            .show()
     }
 }

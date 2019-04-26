@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.trip_list_item.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class TripListAdapter(private val tripList: List<Trip>, private val handler: OnClick) :
+class TripListAdapter(private val tripList: MutableList<Trip>, private val handler: OnClick) :
     RecyclerView.Adapter<TripListAdapter.TripViewHolder>() {
 
     interface OnClick {
@@ -32,6 +32,11 @@ class TripListAdapter(private val tripList: List<Trip>, private val handler: OnC
     }
 
     override fun getItemCount(): Int = tripList.size
+
+    fun removeItem(position: Int) {
+        notifyItemRemoved(position)
+        tripList.removeAt(position)
+    }
 
     inner class TripViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
             View.OnClickListener,

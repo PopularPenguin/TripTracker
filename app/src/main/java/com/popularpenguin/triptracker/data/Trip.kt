@@ -14,6 +14,7 @@ class Trip() {
     var date = Date()
     var description = ""
     var points = mutableListOf<LatLng>()
+    var snapshot = "" // path for the map snapshot image
     @ColumnInfo(name = "total_distance") var totalDistance = 0.0
 
     constructor(
@@ -21,12 +22,14 @@ class Trip() {
         desc: String,
         date: Date,
         points: MutableList<LatLng>,
+        snapshot: String,
         distance: Double
     ): this() {
         uid = id
         description = desc
         this.date = date
         this.points = points
+        this.snapshot = snapshot
         totalDistance = distance
     }
 

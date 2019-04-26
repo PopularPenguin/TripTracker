@@ -1,6 +1,8 @@
 package com.popularpenguin.triptracker.map
 
+import android.content.res.ColorStateList
 import android.graphics.Camera
+import android.graphics.PorterDuff
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -13,6 +15,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.gms.maps.model.RoundCap
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
@@ -77,7 +80,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
                 notification.createNotification()
 
-                it.setBackgroundColor(fragment.resources.getColor(R.color.transparentRed))
+                it.backgroundTintList = ColorStateList.valueOf(fragment.resources.getColor(R.color.red))
             }
 
             if (isRunning) {
@@ -102,7 +105,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     }
 
     private fun showSaveDialog() {
-        val dialog = SaveDialog(fragment.requireContext()).apply {
+        SaveDialog(fragment.requireContext()).apply {
             setCancelButtonOnClickListener {
                 location.apply {
                     addListener(this@TripTracker)

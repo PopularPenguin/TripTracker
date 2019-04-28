@@ -5,12 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.PolylineOptions
 import com.popularpenguin.triptracker.R
+import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.map.UserLocation
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.android.synthetic.main.fragment_single_trip_map.*
@@ -19,7 +23,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SingleTripFragment: Fragment(), OnMapReadyCallback {
+class SingleTripFragment: Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick {
 
     companion object {
         private const val ID_KEY = "uid"
@@ -47,6 +51,22 @@ class SingleTripFragment: Fragment(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
+    private fun setRecyclerView(trip: Trip) {
+        val viewManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+        )
+        val viewAdapter = PhotoAdapter(trip, this)
+
+        requireActivity().findViewById<RecyclerView>(R.id.photoRecyclerView).apply {
+            setHasFixedSize(true)
+
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
@@ -68,6 +88,16 @@ class SingleTripFragment: Fragment(), OnMapReadyCallback {
             singleTripZoomFab.setOnClickListener {
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(trip.points[0], UserLocation.ZOOM))
             }
+
+            setRecyclerView(trip)
         }
+    }
+
+    override fun onClick(photoPath: String) {
+        // TODO: Display a full-screen photo
+    }
+
+    override fun onLongClick(adapter: PhotoAdapter, position: Int, photoPath: String) {
+        // TODO: Display dialog to delete photo from gallery
     }
 }

@@ -6,10 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.data.Trip
-import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.android.synthetic.main.trip_list_item.view.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class TripListAdapter(private val tripList: MutableList<Trip>, private val handler: OnClick) :
     RecyclerView.Adapter<TripListAdapter.TripViewHolder>() {
@@ -50,8 +47,8 @@ class TripListAdapter(private val tripList: MutableList<Trip>, private val handl
         fun bind(trip: Trip) {
             with (itemView) {
                 val distance = trip.totalDistance.toString().take(6)
-                descriptionView.text = "${trip.description},\n$distance miles"
-                dateView.text = trip.getFormattedDate()
+                listDescriptionView.text = "${trip.description},\n$distance miles"
+                listDateView.text = trip.getFormattedDate()
             }
         }
 

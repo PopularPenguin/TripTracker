@@ -1,11 +1,10 @@
 package com.popularpenguin.triptracker.map
 
 import android.content.res.ColorStateList
-import android.graphics.Camera
-import android.graphics.PorterDuff
+import android.graphics.Bitmap
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -14,18 +13,14 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
-import com.google.android.gms.maps.model.RoundCap
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.ScreenNavigator
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 /** Class to combine the map and location functions to draw a trip session */
@@ -127,11 +122,12 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     }
 
     private fun commitToDatabase(dialogDescription: String) {
-        val job = GlobalScope.launch (Dispatchers.IO) {
+        val job = GlobalScope.launch(Dispatchers.IO) {
             val trip = Trip().apply {
                 date = Date()
                 description = dialogDescription
                 points = locationList
+                // snapshot = saveSnapshot(date.time) TODO: Remove
                 totalDistance = this@TripTracker.distance
             }
 
@@ -154,6 +150,31 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         return totalDistance * 0.000621371 // meters to miles
     }
 
+    /*
+    private fun saveSnapshot(date: Long): String {
+        // TODO: Camera function inside app and associate that image with a trip in the list?
+
+        val filesDir = fragment.requireContext().filesDir
+        val fileName = "$date.jpg"
+        val file = File(filesDir, fileName)
+        val contentResolver = fragment.requireActivity().contentResolver
+
+        map.snapshot { bitmap ->
+            val outputStream = FileOutputStream(file)
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, outputStream)
+            MediaStore.Images.Media.insertImage(
+                    contentResolver,
+                    bitmap,
+                    file.name,
+                    file.name)
+
+            outputStream.close()
+        }
+
+        return "file://${file.absolutePath}"
+    } */
+
     override fun onLocationUpdated(latLng: LatLng, zoom: Float) {
         if (!isMapReady) return
 
@@ -170,8 +191,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 } else {
                     addPolyline(polylineOptions.add(locationList[locationList.size - 2], latLng))
                 }
-            }
-            else {
+            } else {
                 // this is the first location update, so zoom in on the user's location
                 animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
             }
@@ -194,19 +214,5 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
             }
         }
         isMapReady = true
-
-        /*
-        // Add a marker in Sydney, Australia, and move the camera
-        val sydneyLatLng = LatLng(-34.0, 151.0)
-        map.addMarker(MarkerOptions().apply {
-            position(sydneyLatLng)
-            title("Marker in Sydney")
-        })
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydneyLatLng))
-        GlobalScope.launch(Dispatchers.Main) {
-            delay(11000L)
-
-            map.moveCamera(CameraUpdateFactory.newLatLng(LatLng(location.latitude, location.longitude)))
-        } */
     }
 }

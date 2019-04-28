@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="96dp"
+    android:layout_height="192dp"
     android:layout_margin="@dimen/card_margin"
-    app:cardElevation="@dimen/card_elevation"
-    app:cardCornerRadius="@dimen/card_corner_radius">
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/card_elevation">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -16,25 +15,35 @@
         android:background="@color/darkBrown">
 
         <TextView
-            android:id="@+id/descriptionView"
+            android:id="@+id/listDescriptionView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:textColor="@color/white"
-            tools:text="Description"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toTopOf="@+id/listDateView"
+            app:layout_constraintEnd_toEndOf="@+id/listImageView"
+            app:layout_constraintStart_toStartOf="@+id/listImageView"
+            app:layout_constraintTop_toBottomOf="@+id/listImageView"
+            tools:text="Description" />
 
         <TextView
-            android:id="@+id/dateView"
+            android:id="@+id/listDateView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
             android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="@+id/descriptionView"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/listDescriptionView"
+            app:layout_constraintStart_toStartOf="@+id/listDescriptionView"
             tools:text="Date" />
+
+        <ImageView
+            android:id="@+id/listImageView"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

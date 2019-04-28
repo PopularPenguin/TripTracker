@@ -31,7 +31,7 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        fab.setOnClickListener {
+        newTripFab.setOnClickListener {
             ScreenNavigator(requireActivity().supportFragmentManager).loadMapTracker()
         }
 

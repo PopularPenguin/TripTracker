@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scrollbars="horizontal"
-        android:background="@color/lightBrown"
+        android:background="@color/black"
         app:layout_constraintTop_toBottomOf="@id/singleTripGuideline"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
@@ -35,7 +35,7 @@
         android:id="@+id/singleTripZoomFab"
         android:layout_width="@dimen/fab_size_small"
         android:layout_height="@dimen/fab_size_small"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
         android:elevation="@dimen/fab_elevation"
         android:translationZ="@dimen/fab_z"
@@ -43,20 +43,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:rippleColor="@color/transparentGray"
-        app:srcCompat="@android:drawable/ic_input_add" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/singleTripCameraFab"
-        android:layout_width="@dimen/fab_size"
-        android:layout_height="@dimen/fab_size"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:elevation="@dimen/fab_elevation"
-        android:translationZ="@dimen/fab_z"
-        app:backgroundTint="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/photoRecyclerView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:rippleColor="@color/gray"
         app:srcCompat="@android:drawable/ic_input_add" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

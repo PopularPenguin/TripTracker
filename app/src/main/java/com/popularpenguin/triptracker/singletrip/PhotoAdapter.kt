@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.data.Trip
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.photo_list_item.view.*
 
 class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
     RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
@@ -33,7 +35,7 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
         notifyItemRemoved(position)
         trip.photoList.removeAt(position)
 
-        // TODO: Remove photo from gallery
+        // TODO: Remove photo from gallery?
     }
 
     inner class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
@@ -46,7 +48,9 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
         }
 
         fun bind(photoPath: String) {
-            // TODO: Use Picasso to put the photo into the ImageView
+            Picasso.get()
+                .load(photoPath)
+                .into(itemView.singleTripPhotoView)
         }
 
         override fun onClick(view: View) {

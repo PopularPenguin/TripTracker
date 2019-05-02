@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.data.Trip
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.trip_list_item.view.*
 
 class TripListAdapter(private val tripList: MutableList<Trip>, private val handler: OnClick) :
@@ -50,6 +51,17 @@ class TripListAdapter(private val tripList: MutableList<Trip>, private val handl
                 listDescriptionView.text = "${trip.description},\n$distance miles"
                 listDateView.text = trip.getFormattedDate()
             }
+
+            val photo = when {
+                trip.captionPhoto.isNotEmpty() -> trip.captionPhoto
+                trip.photoList.isNotEmpty() -> trip.photoList[0]
+                else -> ""
+            }
+
+            Picasso.get()
+                .load(photo)
+                .fit()
+                .into(itemView.listImageView)
         }
 
         override fun onClick(view: View) {

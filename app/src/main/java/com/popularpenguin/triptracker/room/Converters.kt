@@ -57,7 +57,7 @@ class Converters {
         fun fromPhotoList(photoList: List<String>): String {
             val sb = StringBuilder()
 
-            photoList.forEach { "${sb.append(it)};" }
+            photoList.forEach { sb.append("$it;") }
 
             return sb.toString()
         }

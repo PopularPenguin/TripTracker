@@ -17,6 +17,7 @@ class PermissionValidator(private val activity: Activity) {
     fun requestPermissions() {
         requestLocation()
         requestGps()
+        requestStorage()
     }
 
     private fun requestGps() {
@@ -37,6 +38,18 @@ class PermissionValidator(private val activity: Activity) {
             ActivityCompat.requestPermissions(
                 activity,
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                0
+            )
+        }
+    }
+
+    // TODO: Request storage permission, check this
+    private fun requestStorage() {
+        if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 0
             )
         }

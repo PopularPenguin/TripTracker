@@ -1,11 +1,16 @@
 package com.popularpenguin.triptracker.map
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -18,6 +23,7 @@ import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.ScreenNavigator
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
+import com.popularpenguin.triptracker.singletrip.SingleTripFragment
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileOutputStream
@@ -26,13 +32,17 @@ import java.util.*
 /** Class to combine the map and location functions to draw a trip session */
 class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLocation.UserLocationListener {
 
+    private val REQUEST_PHOTO = 0
+
     private val dao = AppDatabase.get(fragment.requireActivity().applicationContext).dao()
     private val jobList = mutableListOf<Job>()
     private val location = UserLocation(fragment.requireContext())
     private val locationList = mutableListOf<LatLng>()
     private val notification = TrackerNotification(fragment.requireContext())
+    private val photoList = mutableListOf<String>()
 
     private lateinit var map: GoogleMap
+    private lateinit var photoFile: File
 
     private var distance = 0.0
     private var isMapReady = false
@@ -63,6 +73,42 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         }
 
         jobList.forEach { it.cancel() }
+    }
+
+    fun addCameraListener(cameraView: View) {
+        cameraView.setOnClickListener {
+            val filesDir = fragment.requireContext().filesDir
+            val fileName = "${System.currentTimeMillis()}.jpg"
+            photoFile = File(filesDir, fileName)
+            val capture = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val packageManager = fragment.requireActivity().packageManager
+
+            if (capture.resolveActivity(packageManager) == null) {
+                it.isEnabled = false
+            }
+
+            val uri = FileProvider.getUriForFile(
+                fragment.requireActivity(),
+                "com.popularpenguin.triptracker.fileprovider",
+                photoFile
+            )
+            capture.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+
+            val cameraActivities = packageManager.queryIntentActivities(
+                capture,
+                PackageManager.MATCH_DEFAULT_ONLY
+            )
+
+            for (activity in cameraActivities) {
+                fragment.requireActivity().grantUriPermission(
+                    activity.activityInfo.packageName,
+                    uri,
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+            }
+
+            fragment.startActivityForResult(capture, REQUEST_PHOTO)
+        }
     }
 
     fun addControlListener(controlView: View) {
@@ -99,6 +145,40 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         }
     }
 
+    fun storePhoto() {
+        // TODO: Move to coroutine if this operation is noticably slow?
+        val activity = fragment.requireActivity()
+        val uri = FileProvider.getUriForFile(
+            activity,
+            "com.popularpenguin.triptracker.fileprovider",
+            photoFile
+        )
+
+        activity.revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+
+        val bitmap = BitmapFactory.decodeFile(photoFile.path)
+        val outputStream = FileOutputStream(photoFile)
+
+        // rotate the bitmap 90 degrees
+        val matrix = Matrix().apply { postRotate(90.0f) }
+        val finalBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+
+        // compress and save to gallery
+        finalBitmap.compress(Bitmap.CompressFormat.JPEG, 95, outputStream)
+        MediaStore.Images.Media.insertImage(
+            activity.contentResolver,
+            finalBitmap,
+            photoFile.name,
+            photoFile.name
+        )
+
+        photoList.add("file://${photoFile.absolutePath}")
+
+        outputStream.close()
+
+        // TODO: Get current location and add a marker for where the photo was taken?
+    }
+
     private fun showSaveDialog() {
         SaveDialog(fragment.requireContext()).apply {
             setCancelButtonOnClickListener {
@@ -116,7 +196,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
                 this.dismiss()
 
-                ScreenNavigator(fragment.activity!!.supportFragmentManager).loadTripList()
+                ScreenNavigator(fragment.requireActivity().supportFragmentManager).loadTripList()
             }
         }.show()
     }
@@ -126,8 +206,8 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
             val trip = Trip().apply {
                 date = Date()
                 description = dialogDescription
+                photoList = this@TripTracker.photoList
                 points = locationList
-                // snapshot = saveSnapshot(date.time) TODO: Remove
                 totalDistance = this@TripTracker.distance
             }
 
@@ -149,31 +229,6 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
         return totalDistance * 0.000621371 // meters to miles
     }
-
-    /*
-    private fun saveSnapshot(date: Long): String {
-        // TODO: Camera function inside app and associate that image with a trip in the list?
-
-        val filesDir = fragment.requireContext().filesDir
-        val fileName = "$date.jpg"
-        val file = File(filesDir, fileName)
-        val contentResolver = fragment.requireActivity().contentResolver
-
-        map.snapshot { bitmap ->
-            val outputStream = FileOutputStream(file)
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, outputStream)
-            MediaStore.Images.Media.insertImage(
-                    contentResolver,
-                    bitmap,
-                    file.name,
-                    file.name)
-
-            outputStream.close()
-        }
-
-        return "file://${file.absolutePath}"
-    } */
 
     override fun onLocationUpdated(latLng: LatLng, zoom: Float) {
         if (!isMapReady) return

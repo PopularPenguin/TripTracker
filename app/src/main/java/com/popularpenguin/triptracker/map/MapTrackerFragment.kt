@@ -1,5 +1,6 @@
 package com.popularpenguin.triptracker.map
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,7 @@ class MapTrackerFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         tripTracker = TripTracker(this).apply {
+            addCameraListener(trackerCameraFab)
             addControlListener(trackerControlFab)
             addZoomListener(trackerZoomFab)
         }
@@ -41,5 +43,9 @@ class MapTrackerFragment: Fragment() {
         tripTracker.onPause()
 
         super.onPause()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        tripTracker.storePhoto()
     }
 }

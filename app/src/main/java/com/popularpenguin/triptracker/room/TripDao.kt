@@ -1,9 +1,6 @@
 package com.popularpenguin.triptracker.room
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.popularpenguin.triptracker.data.Trip
 
 @Dao
@@ -25,6 +22,9 @@ interface TripDao {
 
     @Insert
     suspend fun insertAll(vararg trips: Trip)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun update(trip: Trip)
 
     @Delete
     suspend fun delete(trip: Trip)

@@ -23,12 +23,16 @@ class Trip() {
         desc: String,
         date: Date,
         points: MutableList<LatLng>,
+        captionPhoto: String,
+        photoList: MutableList<String>,
         distance: Double
     ): this() {
         uid = id
         description = desc
         this.date = date
         this.points = points
+        this.captionPhoto = captionPhoto
+        this.photoList = photoList
         totalDistance = distance
     }
 

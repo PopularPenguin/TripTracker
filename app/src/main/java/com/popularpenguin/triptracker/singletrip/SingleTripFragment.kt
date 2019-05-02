@@ -1,12 +1,9 @@
 package com.popularpenguin.triptracker.singletrip
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,8 +16,6 @@ import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.map.UserLocation
 import com.popularpenguin.triptracker.room.AppDatabase
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.dialog_display_photo.*
 import kotlinx.android.synthetic.main.fragment_single_trip_map.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

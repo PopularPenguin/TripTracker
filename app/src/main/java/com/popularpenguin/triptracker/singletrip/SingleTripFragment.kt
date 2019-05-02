@@ -99,21 +99,7 @@ class SingleTripFragment: Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick {
     }
 
     override fun onClick(photoPath: String) {
-        val photoDialog = Dialog(requireContext()).apply {
-            window?.requestFeature(Window.FEATURE_NO_TITLE)
-            setContentView(layoutInflater.inflate(R.layout.dialog_display_photo, null))
-        }
-        val photoView = photoDialog.dialogPhotoView.apply {
-            setOnClickListener {
-                photoDialog.dismiss() // dismiss dialog if photo is tapped
-            }
-        }
-
-        Picasso.get()
-                .load(photoPath)
-                .into(photoView)
-
-        photoDialog.show()
+        PhotoDialog(requireContext(), photoPath).show()
     }
 
     override fun onLongClick(adapter: PhotoAdapter, position: Int, photoPath: String) {

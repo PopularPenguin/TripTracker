@@ -1,11 +1,13 @@
 package com.popularpenguin.triptracker.singletrip
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.data.Trip
+import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.photo_list_item.view.*
 
@@ -14,7 +16,7 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
 
     interface OnClick {
         fun onClick(photoPath: String)
-        fun onLongClick(adapter: PhotoAdapter, position: Int, photoPath: String)
+        fun onLongClick(adapter: PhotoAdapter, position: Int, trip: Trip)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
@@ -33,9 +35,9 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
 
     fun removeItem(position: Int) {
         notifyItemRemoved(position)
-        trip.photoList.removeAt(position)
 
-        // TODO: Remove photo from gallery?
+        trip.photoList.removeAt(position)
+        trip.uriList.removeAt(position)
     }
 
     inner class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
@@ -50,6 +52,7 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
         fun bind(photoPath: String) {
             Picasso.get()
                 .load(photoPath)
+                .fit()
                 .into(itemView.singleTripPhotoView)
         }
 
@@ -65,7 +68,7 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
             handler.onLongClick(
                     this@PhotoAdapter,
                     adapterPosition,
-                    trip.photoList[adapterPosition]
+                    trip
             )
 
             return true

@@ -94,10 +94,11 @@ class SingleTripFragment: Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick {
     }
 
     override fun onClick(photoPath: String) {
+        // TODO: Change dialog to a Fragment with a FragmentStatePagerAdapter to thumb through photos
         PhotoDialog(requireContext(), photoPath).show()
     }
 
-    override fun onLongClick(adapter: PhotoAdapter, position: Int, photoPath: String) {
-        // TODO: Display dialog to delete photo from gallery
+    override fun onLongClick(adapter: PhotoAdapter, position: Int, trip: Trip) {
+        PhotoDeleteDialog(requireContext(), adapter, position, trip, trip.uriList[position]).show()
     }
 }

@@ -1,5 +1,6 @@
 package com.popularpenguin.triptracker.room
 
+import android.net.Uri
 import androidx.room.TypeConverter
 import com.google.android.gms.maps.model.LatLng
 import java.util.*
@@ -77,6 +78,37 @@ class Converters {
             }
 
             return photoList
+        }
+
+        @TypeConverter
+        @JvmStatic
+        fun fromUriList(uriList: List<Uri>): String {
+            val sb = StringBuilder()
+
+            uriList.forEach {
+                sb.append("$it;")
+            }
+
+            return sb.toString()
+        }
+
+        @TypeConverter
+        @JvmStatic
+        fun toUriList(str: String): List<Uri> {
+            if (str.isEmpty()) {
+                return listOf()
+            }
+
+            val uriList = mutableListOf<Uri>()
+            val uriStrings = str.split(";")
+
+            uriStrings.forEach {
+                if (it.isNotEmpty()) {
+                    uriList.add(Uri.parse(it))
+                }
+            }
+
+            return uriList
         }
     }
 }

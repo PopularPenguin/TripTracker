@@ -6,6 +6,7 @@ import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -23,7 +24,6 @@ import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.ScreenNavigator
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
-import com.popularpenguin.triptracker.singletrip.SingleTripFragment
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileOutputStream
@@ -32,7 +32,9 @@ import java.util.*
 /** Class to combine the map and location functions to draw a trip session */
 class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLocation.UserLocationListener {
 
-    private val REQUEST_PHOTO = 0
+    companion object {
+        private const val REQUEST_PHOTO = 0
+    }
 
     private val dao = AppDatabase.get(fragment.requireActivity().applicationContext).dao()
     private val jobList = mutableListOf<Job>()
@@ -40,6 +42,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     private val locationList = mutableListOf<LatLng>()
     private val notification = TrackerNotification(fragment.requireContext())
     private val photoList = mutableListOf<String>()
+    private val uriList = mutableListOf<Uri>()
 
     private lateinit var map: GoogleMap
     private lateinit var photoFile: File
@@ -153,6 +156,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
             "com.popularpenguin.triptracker.fileprovider",
             photoFile
         )
+        uriList.add(uri)
 
         activity.revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 
@@ -209,6 +213,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 photoList = this@TripTracker.photoList
                 points = locationList
                 totalDistance = this@TripTracker.distance
+                uriList = this@TripTracker.uriList
             }
 
             dao.insert(trip)

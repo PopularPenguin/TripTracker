@@ -61,21 +61,6 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     }
 
     override fun onLongClick(adapter: TripListAdapter, position: Int, trip: Trip) {
-        AlertDialog.Builder(requireContext(), R.style.DialogTheme)
-            .setTitle(R.string.dialog_delete_title)
-            .setMessage(R.string.dialog_delete_message)
-            .setPositiveButton(R.string.dialog_delete_positive) { dialog, _ ->
-                GlobalScope.launch(Dispatchers.IO) {
-                    adapter.removeItem(position)
-                    AppDatabase.get(requireContext()).dao().delete(trip)
-                }
-
-                dialog.dismiss()
-            }
-            .setNegativeButton(R.string.dialog_delete_negative) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setIcon(R.drawable.ic_launcher_foreground) // TODO: Change to app icon
-            .show()
+        TripDeleteDialog(requireContext(), adapter, position, trip).show()
     }
 }

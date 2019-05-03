@@ -1,5 +1,6 @@
 package com.popularpenguin.triptracker.data
 
+import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -17,6 +18,7 @@ class Trip() {
     var captionPhoto = "" // displayed in TripList, if empty, first photo from photoList is shown
     var photoList = mutableListOf<String>() // list of photo links for display in single trip
     @ColumnInfo(name = "total_distance") var totalDistance = 0.0
+    var uriList = mutableListOf<Uri>()
 
     constructor(
         id: Int,
@@ -25,7 +27,8 @@ class Trip() {
         points: MutableList<LatLng>,
         captionPhoto: String,
         photoList: MutableList<String>,
-        distance: Double
+        distance: Double,
+        uriList: MutableList<Uri>
     ): this() {
         uid = id
         description = desc
@@ -34,6 +37,7 @@ class Trip() {
         this.captionPhoto = captionPhoto
         this.photoList = photoList
         totalDistance = distance
+        this.uriList = uriList
     }
 
     fun getFormattedDate(): String {

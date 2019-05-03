@@ -2,6 +2,10 @@
     <string name="app_name">Trip Tracker</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Date Picker -->
+    <string name="date_picker_title_start">Select the earliest trip to load</string>
+    <string name="date_picker_title_end">Select the latest trip to load</string>
+
     <!-- Dialog Photo Delete -->
     <string name="dialog_photo_delete_title">Delete Photo</string>
     <string name="dialog_photo_delete_message">Delete this photo? This action will remove the photo from your device.</string>

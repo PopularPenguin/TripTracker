@@ -8,7 +8,7 @@ interface TripDao {
     @Query("SELECT * FROM trip ORDER BY date DESC")
     suspend fun getAll(): List<Trip>
 
-    @Query("SELECT * FROM trip WHERE date BETWEEN (:startDate) AND (:endDate)")
+    @Query("SELECT * FROM trip WHERE date BETWEEN (:startDate) AND (:endDate) ORDER BY date DESC")
     suspend fun loadByDate(startDate: Long, endDate: Long): List<Trip>
 
     @Query("SELECT * FROM trip WHERE uid IS (:uid)")

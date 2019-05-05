@@ -9,8 +9,10 @@ import android.graphics.Matrix
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -19,6 +21,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.ScreenNavigator
@@ -36,8 +39,6 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         private const val REQUEST_PHOTO = 0
     }
 
-    private val dao = AppDatabase.get(fragment.requireActivity().applicationContext).dao()
-    private val jobList = mutableListOf<Job>()
     private val location = UserLocation(fragment.requireContext())
     private val locationList = mutableListOf<LatLng>()
     private val notification = TrackerNotification(fragment.requireContext())
@@ -74,8 +75,10 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
             removeListener(this@TripTracker)
             stopLocationUpdates()
         }
+    }
 
-        jobList.forEach { it.cancel() }
+    fun onDestroy() {
+        notification.cancel()
     }
 
     fun addCameraListener(cameraView: View) {
@@ -122,9 +125,17 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                     startLocationUpdates()
                 }
 
-                notification.createNotification()
+                notification.create()
 
-                it.backgroundTintList = ColorStateList.valueOf(fragment.resources.getColor(R.color.red))
+                it.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(fragment.requireContext(), R.color.red)
+                )
+
+                if (it is FloatingActionButton) {
+                    it.setImageDrawable(
+                        fragment.resources.getDrawable(android.R.drawable.ic_menu_edit, null)
+                    )
+                }
             }
 
             if (isRunning) {
@@ -194,7 +205,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 this.dismiss()
             }
             setSaveButtonOnClickListener {
-                notification.cancelNotification()
+                notification.cancel()
 
                 commitToDatabase(this.getDescription())
 
@@ -206,7 +217,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     }
 
     private fun commitToDatabase(dialogDescription: String) {
-        val job = GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch(Dispatchers.IO) {
             val trip = Trip().apply {
                 date = Date()
                 description = dialogDescription
@@ -216,11 +227,10 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 uriList = this@TripTracker.uriList
             }
 
-            dao.insert(trip)
+            AppDatabase.get(fragment.requireContext())
+                .dao()
+                .insert(trip)
         }
-
-        job.start()
-        jobList.add(job)
 
         Toast.makeText(
                 fragment.requireContext(),

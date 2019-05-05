@@ -24,7 +24,7 @@ class TrackerNotification(private val context: Context) {
         }
     }
 
-    fun createNotification() {
+    fun create() {
         val resources = context.resources
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder(context, CHANNEL_ID)
@@ -40,7 +40,7 @@ class TrackerNotification(private val context: Context) {
         notificationManager.notify(notificationId, notification)
     }
 
-    fun cancelNotification() {
+    fun cancel() {
         notificationManager.cancel(notificationId)
     }
 

@@ -1,5 +1,6 @@
 package com.popularpenguin.triptracker.map
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,9 +14,7 @@ class MapTrackerFragment: Fragment() {
 
     companion object {
         fun newInstance(): MapTrackerFragment {
-            val fragment = MapTrackerFragment()
-
-            return fragment
+            return MapTrackerFragment()
         }
     }
 
@@ -45,7 +44,15 @@ class MapTrackerFragment: Fragment() {
         super.onPause()
     }
 
+    override fun onDestroy() {
+        tripTracker.onDestroy()
+
+        super.onDestroy()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        tripTracker.storePhoto()
+        if (resultCode == Activity.RESULT_OK) {
+            tripTracker.storePhoto()
+        }
     }
 }

@@ -23,12 +23,14 @@
         android:layout_marginBottom="@dimen/fab_margin"
         android:background="@color/black"
         android:elevation="@dimen/fab_elevation"
+        android:scaleType="center"
         android:translationZ="@dimen/fab_z"
         app:backgroundTint="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
+        app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:rippleColor="@color/gray"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_media_play" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/endDateFab"
@@ -38,12 +40,14 @@
         android:layout_marginBottom="@dimen/fab_margin"
         android:background="@color/black"
         android:elevation="@dimen/fab_elevation"
+        android:scaleType="center"
         android:translationZ="@dimen/fab_z"
-        app:layout_constraintStart_toEndOf="@id/startDateFab"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:backgroundTint="@color/white"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/startDateFab"
         app:rippleColor="@color/gray"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/newTripFab"
@@ -54,10 +58,10 @@
         android:background="@color/black"
         android:elevation="@dimen/fab_elevation"
         android:translationZ="@dimen/fab_z"
-        app:backgroundTint="@color/white"
+        app:backgroundTint="@color/green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:rippleColor="@color/gray"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_menu_add" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

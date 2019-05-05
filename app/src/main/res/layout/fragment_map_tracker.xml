@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -10,21 +9,24 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/trackerCameraFab"
-        android:layout_width="@dimen/fab_size"
-        android:layout_height="@dimen/fab_size"
+        android:layout_width="@dimen/fab_size_small"
+        android:layout_height="@dimen/fab_size_small"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:background="@color/black"
         android:elevation="@dimen/fab_elevation"
+        android:scaleType="center"
         android:translationZ="@dimen/fab_z"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:backgroundTint="@color/red"
+        app:backgroundTint="@color/lightBrown"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@id/trackerControlFab"
+        app:layout_constraintEnd_toEndOf="@id/trackerControlFab"
+        app:layout_constraintStart_toStartOf="@id/trackerControlFab"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -36,10 +38,10 @@
         android:background="@color/black"
         android:elevation="@dimen/fab_elevation"
         android:translationZ="@dimen/fab_z"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/trackerCameraFab"
         app:backgroundTint="@color/green"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_media_play" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/trackerZoomFab"
@@ -47,10 +49,14 @@
         android:layout_height="@dimen/fab_size_small"
         android:layout_marginTop="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
-        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="@dimen/fab_elevation"
+        android:scaleType="center"
+        android:translationZ="@dimen/fab_z"
+        app:backgroundTint="@color/transparentWhite"
+        app:fabSize="mini"
         app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="@color/transparentWhite2"
+        app:layout_constraintTop_toTopOf="parent"
         app:rippleColor="@color/transparentGray"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_menu_zoom" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

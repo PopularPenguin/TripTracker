@@ -11,16 +11,8 @@
         android:layout_height="0dp"
         android:elevation="@dimen/recycler_elevation"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@id/tripListGuideline"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/tripListGuideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/startDateFab"

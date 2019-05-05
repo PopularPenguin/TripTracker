@@ -100,6 +100,20 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
                 adapter = viewAdapter
 
                 setHasFixedSize(true)
+
+                addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    val fabList = listOf(startDateFab, endDateFab, newTripFab)
+
+                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                        fabList.forEach {
+                            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                                it.show()
+                            } else {
+                                it.hide()
+                            }
+                        }
+                    }
+                })
             }
         }
     }

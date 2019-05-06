@@ -5,8 +5,10 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
@@ -15,12 +17,26 @@ import com.popularpenguin.triptracker.R
 class TrackerNotification : Service() {
 
     companion object {
-        const val CHANNEL_ID = "trip_tracker_channel"
-        const val CHANNEL_NAME = "Trip Tracker"
+        private const val CHANNEL_ID = "trip_tracker_channel"
+        private const val CHANNEL_NAME = "Trip Tracker"
+        private const val notificationId = 1
+
+        fun getServiceConnection(context: Context): ServiceConnection {
+            return object : ServiceConnection {
+                lateinit var service: Service
+
+                override fun onServiceConnected(className: ComponentName?, binder: IBinder) {
+                    service = (binder as NotificationBinder).service
+
+                    service.startService(Intent(context, TrackerNotification::class.java))
+                }
+
+                override fun onServiceDisconnected(className: ComponentName?) { }
+            }
+        }
     }
 
     private val binder = NotificationBinder(this)
-    private val notificationId = 1
 
     private lateinit var notificationManager: NotificationManager
 

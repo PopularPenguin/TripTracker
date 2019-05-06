@@ -1,19 +1,15 @@
 package com.popularpenguin.triptracker.map
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
-import android.os.IBinder
 import android.provider.MediaStore
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -28,11 +24,12 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
-import com.popularpenguin.triptracker.common.MainActivity
 import com.popularpenguin.triptracker.common.ScreenNavigator
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -46,14 +43,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
     private val location = UserLocation(fragment.requireContext())
     private val locationList = mutableListOf<LatLng>()
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName?, binder: IBinder) {
-            (binder as TrackerNotification.NotificationBinder).service
-                    .startService(Intent(fragment.requireActivity(), TrackerNotification::class.java))
-        }
-
-        override fun onServiceDisconnected(className: ComponentName?) { }
-    }
+    private val serviceConnection = TrackerNotification.getServiceConnection(fragment.requireContext())
     private val photoList = mutableListOf<String>()
     private val uriList = mutableListOf<Uri>()
 
@@ -151,8 +141,6 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                             serviceConnection,
                             Context.BIND_AUTO_CREATE
                     )
-
-                    this.startService(Intent(this, TrackerNotification::class.java))
                 }
 
                 it.backgroundTintList = ColorStateList.valueOf(

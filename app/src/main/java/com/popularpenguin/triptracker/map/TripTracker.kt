@@ -1,12 +1,16 @@
 package com.popularpenguin.triptracker.map
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
+import android.os.IBinder
 import android.provider.MediaStore
 import android.util.Log
 import android.view.KeyEvent
@@ -24,6 +28,7 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
+import com.popularpenguin.triptracker.common.MainActivity
 import com.popularpenguin.triptracker.common.ScreenNavigator
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
@@ -41,7 +46,14 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
     private val location = UserLocation(fragment.requireContext())
     private val locationList = mutableListOf<LatLng>()
-    private val notification = TrackerNotification(fragment.requireContext())
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName?, binder: IBinder) {
+            (binder as TrackerNotification.NotificationBinder).service
+                    .startService(Intent(fragment.requireActivity(), TrackerNotification::class.java))
+        }
+
+        override fun onServiceDisconnected(className: ComponentName?) { }
+    }
     private val photoList = mutableListOf<String>()
     private val uriList = mutableListOf<Uri>()
 
@@ -52,6 +64,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     private var isMapReady = false
     private var isRefreshed = true
     private var isRunning = false
+    private var isFinished = false
 
     init {
         val mapFragment = fragment.childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -78,7 +91,14 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     }
 
     fun onDestroy() {
-        notification.cancel()
+        Log.d("TripTracker", "onDestroy()")
+
+        if (!isFinished) {
+            fragment.requireActivity().apply {
+                unbindService(serviceConnection)
+                stopService(Intent(this, TrackerNotification::class.java))
+            }
+        }
     }
 
     fun addCameraListener(cameraView: View) {
@@ -125,7 +145,15 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                     startLocationUpdates()
                 }
 
-                notification.create()
+                fragment.requireActivity().apply {
+                    this.bindService(
+                            Intent(this, TrackerNotification::class.java),
+                            serviceConnection,
+                            Context.BIND_AUTO_CREATE
+                    )
+
+                    this.startService(Intent(this, TrackerNotification::class.java))
+                }
 
                 it.backgroundTintList = ColorStateList.valueOf(
                     ContextCompat.getColor(fragment.requireContext(), R.color.red)
@@ -205,11 +233,17 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 this.dismiss()
             }
             setSaveButtonOnClickListener {
-                notification.cancel()
-
                 commitToDatabase(this.getDescription())
 
                 this.dismiss()
+
+                // shut down the notification service before detaching the fragment
+                fragment.requireActivity().apply {
+                    unbindService(serviceConnection)
+                    stopService(Intent(this, TrackerNotification::class.java))
+                }
+
+                isFinished = true
 
                 ScreenNavigator(fragment.requireActivity().supportFragmentManager).loadTripList()
             }

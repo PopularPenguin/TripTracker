@@ -4,32 +4,59 @@ import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.Service
 import android.content.Context
+import android.content.Intent
+import android.os.Binder
 import android.os.Build
+import android.os.IBinder
 import com.popularpenguin.triptracker.R
 
-class TrackerNotification(private val context: Context) {
+class TrackerNotification : Service() {
 
     companion object {
         const val CHANNEL_ID = "trip_tracker_channel"
         const val CHANNEL_NAME = "Trip Tracker"
     }
 
-    private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private val binder = NotificationBinder(this)
     private val notificationId = 1
 
-    init {
+    private lateinit var notificationManager: NotificationManager
+
+    override fun onBind(intent: Intent): IBinder {
+        return binder
+    }
+
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        return START_NOT_STICKY
+    }
+
+    override fun onCreate() {
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel()
         }
+
+        create()
     }
 
-    fun create() {
-        val resources = context.resources
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        cancel()
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        cancel()
+
+        return true
+    }
+
+    private fun create() {
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Notification.Builder(context, CHANNEL_ID)
+            Notification.Builder(this, CHANNEL_ID)
         } else {
-            Notification.Builder(context)
+            Notification.Builder(this)
         }
 
         val notification = builder.setContentTitle(resources.getString(R.string.notification_title))
@@ -40,7 +67,7 @@ class TrackerNotification(private val context: Context) {
         notificationManager.notify(notificationId, notification)
     }
 
-    fun cancel() {
+    private fun cancel() {
         notificationManager.cancel(notificationId)
     }
 
@@ -56,4 +83,6 @@ class TrackerNotification(private val context: Context) {
 
         notificationManager.createNotificationChannel(notificationChannel)
     }
+
+    inner class NotificationBinder(val service: Service) : Binder()
 }

@@ -69,7 +69,21 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setRecyclerView(startDate, endDate)
+        setRecyclerView()
+
+        showAllFab.setOnClickListener {
+            setRecyclerView()
+        }
+
+        searchDescriptionFab.setOnClickListener {
+            SearchDialog(requireContext()).apply {
+                setSearchButtonOnClickListener {
+                    setRecyclerView(searchText = getSearchString())
+
+                    dismiss()
+                }
+            }.show()
+        }
 
         startDateFab.setOnClickListener(showDatePickerListener)
         endDateFab.setOnClickListener(showDatePickerListener)
@@ -79,17 +93,17 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
         }
     }
 
-    private fun setRecyclerView(startDate: Long, endDate: Long) {
+    private fun setRecyclerView(startDate: Long = 0L, endDate: Long = 0L, searchText: String = "") {
         GlobalScope.launch(Dispatchers.Main) {
             val tripList = withContext(Dispatchers.IO) {
-                if (startDate == 0L && endDate == 0L) {
-                    AppDatabase.get(requireContext())
-                            .dao()
-                            .getAll()
+                val dao = AppDatabase.get(requireContext()).dao()
+
+                if (startDate == 0L && endDate == 0L && searchText.isEmpty()) {
+                    dao.getAll()
+                } else if (searchText.isNotEmpty()) {
+                    dao.loadByDescription(searchText)
                 } else {
-                    AppDatabase.get(requireContext())
-                            .dao()
-                            .loadByDate(startDate, endDate)
+                    dao.loadByDate(startDate, endDate)
                 }
             }
             val viewManager = GridLayoutManager(requireContext(), 2)
@@ -102,7 +116,13 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
                 setHasFixedSize(true)
 
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                    val fabList = listOf(startDateFab, endDateFab, newTripFab)
+                    val fabList = listOf(
+                            showAllFab,
+                            searchDescriptionFab,
+                            startDateFab,
+                            endDateFab,
+                            newTripFab
+                    )
 
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         fabList.forEach {

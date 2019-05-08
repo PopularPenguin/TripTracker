@@ -29,7 +29,7 @@ class SaveDialog(context: Context) {
         dialog.show()
     }
 
-    fun setCancelButtonOnClickListener(listener: ((View)-> Unit)) {
+    fun setCancelButtonOnClickListener(listener: ((View) -> Unit)) {
         cancelButton.setOnClickListener(listener)
     }
 

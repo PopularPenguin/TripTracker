@@ -19,9 +19,14 @@
     <string name="dialog_trip_delete_negative">Cancel</string>
 
     <!-- Dialog Save -->
-    <string name="text_hint">Trip Description:</string>
+    <string name="text_hint_save">Trip Description:</string>
     <string name="dialog_save_cancel">Cancel</string>
     <string name="dialog_save_save">Save Trip</string>
+
+    <!-- Dialog Search -->
+    <string name="text_hint_search">Search trip descriptions:</string>
+    <string name="dialog_search_cancel">Cancel</string>
+    <string name="dialog_search_search">Search</string>
 
     <!-- Notification -->
     <string name="notification_title">Trip Tracker</string>

@@ -1,67 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black">
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:background="@color/black">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tripRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:elevation="@dimen/recycler_elevation"
-        android:scrollbars="vertical"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/tripRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="@dimen/recycler_elevation"
+            android:scrollbars="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/startDateFab"
-        android:layout_width="@dimen/fab_size_small"
-        android:layout_height="@dimen/fab_size_small"
-        android:layout_marginStart="@dimen/fab_margin"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:background="@color/black"
-        android:elevation="@dimen/fab_elevation"
-        android:scaleType="center"
-        android:translationZ="@dimen/fab_z"
-        app:backgroundTint="@color/white"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:rippleColor="@color/gray"
-        app:srcCompat="@android:drawable/ic_media_play" />
+            style="@style/SmallFabTheme"
+            android:id="@+id/showAllFab"
+            android:layout_marginStart="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:background="@color/black"
+            app:backgroundTint="@color/orange"
+            app:rippleColor="@color/gray"
+            app:srcCompat="@android:drawable/ic_menu_compass"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/endDateFab"
-        android:layout_width="@dimen/fab_size_small"
-        android:layout_height="@dimen/fab_size_small"
-        android:layout_marginStart="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:background="@color/black"
-        android:elevation="@dimen/fab_elevation"
-        android:scaleType="center"
-        android:translationZ="@dimen/fab_z"
-        app:backgroundTint="@color/white"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/startDateFab"
-        app:rippleColor="@color/gray"
-        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+            style="@style/SmallFabTheme"
+            android:id="@+id/searchDescriptionFab"
+            android:layout_marginStart="32dp"
+            android:background="@color/black"
+            app:backgroundTint="@color/white"
+            app:rippleColor="@color/gray"
+            app:srcCompat="@android:drawable/ic_menu_sort_alphabetically"
+            app:layout_constraintStart_toEndOf="@id/showAllFab"
+            app:layout_constraintBottom_toBottomOf="@id/showAllFab"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/newTripFab"
-        android:layout_width="@dimen/fab_size"
-        android:layout_height="@dimen/fab_size"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:background="@color/black"
-        android:elevation="@dimen/fab_elevation"
-        android:translationZ="@dimen/fab_z"
-        app:backgroundTint="@color/green"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:rippleColor="@color/gray"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+            style="@style/SmallFabTheme"
+            android:id="@+id/startDateFab"
+            android:layout_marginStart="32dp"
+            android:background="@color/black"
+            app:backgroundTint="@color/lightGreen"
+            app:rippleColor="@color/gray"
+            app:srcCompat="@android:drawable/ic_media_play"
+            app:layout_constraintStart_toEndOf="@id/searchDescriptionFab"
+            app:layout_constraintBottom_toBottomOf="@id/searchDescriptionFab"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/SmallFabTheme"
+            android:id="@+id/endDateFab"
+            android:layout_marginStart="@dimen/fab_margin"
+            android:background="@color/black"
+            app:backgroundTint="@color/lightRed"
+            app:rippleColor="@color/gray"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+            app:layout_constraintStart_toEndOf="@id/startDateFab"
+            app:layout_constraintBottom_toBottomOf="@id/startDateFab"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/NormalFabTheme"
+            android:id="@+id/newTripFab"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:background="@color/black"
+            app:backgroundTint="@color/green"
+            app:rippleColor="@color/gray"
+            app:srcCompat="@android:drawable/ic_menu_add"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

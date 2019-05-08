@@ -6,39 +6,39 @@
     android:layout_height="@dimen/dialog_height">
 
     <EditText
-        android:id="@+id/dialogDescriptionEditText"
+        android:id="@+id/dialogSearchEditText"
         android:layout_width="284dp"
         android:layout_height="160dp"
         android:layout_gravity="center"
         android:layout_marginTop="8dp"
-        android:autofillHints="@string/text_hint_save"
-        android:hint="@string/text_hint_save"
+        android:autofillHints="@string/text_hint_search"
+        android:hint="@string/text_hint_search"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/dialogCancelButton"
+        android:id="@+id/dialogSearchCancelButton"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/dialog_save_cancel"
+        android:text="@string/dialog_search_cancel"
         android:textColor="@color/black"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/dialogSaveButton"
+        android:id="@+id/dialogSearchButton"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/dialog_save_save"
+        android:text="@string/dialog_search_search"
         android:textColor="@color/black"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"

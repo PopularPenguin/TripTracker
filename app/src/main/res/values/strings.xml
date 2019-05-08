@@ -1,10 +1,14 @@
 <resources>
     <string name="app_name">Trip Tracker</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_about">About</string>
 
     <!-- Date Picker -->
     <string name="date_picker_title_start">Select the earliest trip to load</string>
     <string name="date_picker_title_end">Select the latest trip to load</string>
+
+    <!-- Dialog About -->
+    <string name="dialog_about_text">TripTracker - Track your adventures!</string>
+    <string name="dialog_about_ok">OK</string>
 
     <!-- Dialog Photo Delete -->
     <string name="dialog_photo_delete_title">Delete Photo</string>

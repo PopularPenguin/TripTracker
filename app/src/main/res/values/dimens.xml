@@ -3,6 +3,10 @@
     <dimen name="app_bar_elevation">4dp</dimen>
     <dimen name="recycler_elevation">2dp</dimen>
 
+    <!-- Dialog About -->
+    <dimen name="dialog_about_width">300dp</dimen>
+    <dimen name="dialog_about_height">120dp</dimen>
+
     <!-- List -->
     <dimen name="card_corner_radius">6dp</dimen>
     <dimen name="card_elevation">2dp</dimen>

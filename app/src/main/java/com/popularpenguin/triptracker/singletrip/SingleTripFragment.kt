@@ -11,7 +11,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.map.UserLocation
@@ -79,14 +82,36 @@ class SingleTripFragment: Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick {
             }
 
             map.apply {
+                // Add the polylines for the entire trip
                 addPolyline(PolylineOptions().apply {
                     addAll(trip.points)
                 })
-                animateCamera(CameraUpdateFactory.newLatLngZoom(trip.points[0], UserLocation.ZOOM))
+                // Add the trip's starting point
+                addMarker(MarkerOptions()
+                    .position(trip.points.first())
+                    .title(getString(R.string.marker_start))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                )
+                // Add the trip's end point if there is more than 0.1 miles between the start and end points
+                val distanceBetweenStartAndEnd = SphericalUtil.computeDistanceBetween(
+                    trip.points.first(),
+                    trip.points.last()
+                ) * 0.000621371 // meters to miles
+
+                if (distanceBetweenStartAndEnd > 0.1 /* miles */) {
+                    addMarker(
+                        MarkerOptions()
+                            .position(trip.points.last())
+                            .title(getString(R.string.marker_end))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                    )
+                }
+
+                animateCamera(CameraUpdateFactory.newLatLngZoom(trip.points.first(), UserLocation.ZOOM))
             }
 
             singleTripZoomFab.setOnClickListener {
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(trip.points[0], UserLocation.ZOOM))
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(trip.points.first(), UserLocation.ZOOM))
             }
 
             setRecyclerView(trip)

@@ -28,6 +28,10 @@
     <string name="dialog_search_cancel">Cancel</string>
     <string name="dialog_search_search">Search</string>
 
+    <!-- Map -->
+    <string name="marker_start">Start</string>
+    <string name="marker_end">End</string>
+
     <!-- Notification -->
     <string name="notification_title">Trip Tracker</string>
     <string name="notification_content">Tracker is running</string>

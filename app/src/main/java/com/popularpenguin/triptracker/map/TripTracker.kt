@@ -19,7 +19,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.maps.android.SphericalUtil
@@ -286,6 +288,12 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
             } else {
                 // this is the first location update, so zoom in on the user's location
                 animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
+                // marker denoting the start of the trip
+                addMarker(MarkerOptions()
+                    .position(latLng)
+                    .title(fragment.getString(R.string.marker_start))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                )
             }
         }
 

@@ -41,6 +41,8 @@
     <string name="notification_content">Tracker is running</string>
 
     <!-- Tracker -->
+    <string name="text_distance">Distance:\u0020</string>
+    <string name="text_distance_units">Miles</string>
     <string name="tracker_save">Trip Saved</string>
     <string name="tracker_start">Start</string>
     <string name="tracker_stop">Stop</string>

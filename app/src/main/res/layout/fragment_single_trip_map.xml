@@ -13,6 +13,19 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/singleTripDistanceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:padding="16dp"
+        android:background="@drawable/text_view_oval"
+        android:text="@string/text_distance"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="parent"/>
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/singleTripGuideline"
         android:layout_width="wrap_content"

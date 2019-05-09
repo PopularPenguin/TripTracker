@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.TranslateAnimation
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -108,6 +109,35 @@ class SingleTripFragment: Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick {
                 }
 
                 animateCamera(CameraUpdateFactory.newLatLngZoom(trip.points.first(), UserLocation.ZOOM))
+
+                // hide the distance view when the camera moves
+                setOnCameraMoveStartedListener {
+                    val hideAnimation = TranslateAnimation(
+                            0.0f,
+                            -singleTripDistanceTextView.width.toFloat(),
+                            singleTripDistanceTextView.height.toFloat(),
+                            -singleTripDistanceTextView.height.toFloat()
+                    ).apply {
+                        duration = 500
+                        fillAfter = true
+                    }
+
+                    singleTripDistanceTextView.startAnimation(hideAnimation)
+                }
+                // show the distance view when the camera isn't moving
+                setOnCameraIdleListener {
+                    val showAnimation = TranslateAnimation(
+                            -singleTripDistanceTextView.width.toFloat(),
+                            0.0f,
+                            0.0f,
+                            singleTripDistanceTextView.height.toFloat()
+                    ).apply {
+                        duration = 500
+                        fillAfter = true
+                    }
+
+                    singleTripDistanceTextView.startAnimation(showAnimation)
+                }
             }
 
             singleTripZoomFab.setOnClickListener {
@@ -115,6 +145,10 @@ class SingleTripFragment: Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick {
             }
 
             setRecyclerView(trip)
+
+            singleTripDistanceTextView.append(
+                    "${trip.totalDistance.toString().take(6)} ${getString(R.string.text_distance_units)}"
+            )
         }
     }
 

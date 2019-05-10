@@ -57,9 +57,9 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
 
     private fun setRecyclerView(trip: Trip) {
         val viewManager = LinearLayoutManager(
-                requireContext(),
-                LinearLayoutManager.HORIZONTAL,
-                false
+            requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
         )
         val viewAdapter = PhotoAdapter(trip, this)
 
@@ -78,8 +78,8 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
             val uid = arguments!!.getInt(ID_KEY)
             trip = withContext(Dispatchers.IO) {
                 AppDatabase.get(requireContext())
-                        .dao()
-                        .loadById(uid)
+                    .dao()
+                    .loadById(uid)
             }
 
             map.apply {
@@ -88,23 +88,24 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                     addAll(trip.points)
                 })
                 // Add the trip's starting point
-                addMarker(MarkerOptions()
+                addMarker(
+                    MarkerOptions()
                         .position(trip.points.first())
                         .title(getString(R.string.marker_start))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                 )
                 // Add the trip's end point if there is more than 0.1 miles between the start and end points
                 val distanceBetweenStartAndEnd = SphericalUtil.computeDistanceBetween(
-                        trip.points.first(),
-                        trip.points.last()
+                    trip.points.first(),
+                    trip.points.last()
                 ) * 0.000621371 // meters to miles
 
                 if (distanceBetweenStartAndEnd > 0.1 /* miles */) {
                     addMarker(
-                            MarkerOptions()
-                                    .position(trip.points.last())
-                                    .title(getString(R.string.marker_end))
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                        MarkerOptions()
+                            .position(trip.points.last())
+                            .title(getString(R.string.marker_end))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                     )
                 }
 
@@ -112,39 +113,37 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
 
                 // hide the distance view when the camera moves
                 setOnCameraMoveStartedListener {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        val hideAnimation = TranslateAnimation(
-                                0.0f,
-                                -singleTripDistanceTextView.width.toFloat(),
-                                singleTripDistanceTextView.height.toFloat(),
-                                -singleTripDistanceTextView.height.toFloat()
-                        ).apply {
-                            duration = 200
-                            fillAfter = true
-                        }
-
-                        singleTripDistanceTextView.startAnimation(hideAnimation)
-
-                        val hidePhotosAnimation = TranslateAnimation(
-                                0.0f,
-                                0.0f,
-                                0.0f,
-                                photoRecyclerView.height.toFloat()
-                        ).apply {
-                            duration = 200
-                            fillAfter = true
-                        }
-
-                        photoRecyclerView.startAnimation(hidePhotosAnimation)
+                    val hideAnimation = TranslateAnimation(
+                        0.0f,
+                        -singleTripDistanceTextView.width.toFloat(),
+                        singleTripDistanceTextView.height.toFloat(),
+                        -singleTripDistanceTextView.height.toFloat()
+                    ).apply {
+                        duration = 200
+                        fillAfter = true
                     }
+
+                    singleTripDistanceTextView.startAnimation(hideAnimation)
+
+                    val hidePhotosAnimation = TranslateAnimation(
+                        0.0f,
+                        0.0f,
+                        0.0f,
+                        photoRecyclerView.height.toFloat()
+                    ).apply {
+                        duration = 200
+                        fillAfter = true
+                    }
+
+                    photoRecyclerView.startAnimation(hidePhotosAnimation)
                 }
                 // show the distance view when the camera isn't moving
                 setOnCameraIdleListener {
                     val showAnimation = TranslateAnimation(
-                            -singleTripDistanceTextView.width.toFloat(),
-                            0.0f,
-                            0.0f,
-                            singleTripDistanceTextView.height.toFloat()
+                        -singleTripDistanceTextView.width.toFloat(),
+                        0.0f,
+                        0.0f,
+                        singleTripDistanceTextView.height.toFloat()
                     ).apply {
                         duration = 200
                         fillAfter = true
@@ -153,10 +152,10 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                     singleTripDistanceTextView.startAnimation(showAnimation)
 
                     val showPhotosAnimation = TranslateAnimation(
-                            0.0f,
-                            0.0f,
-                            photoRecyclerView.height.toFloat(),
-                            0.0f
+                        0.0f,
+                        0.0f,
+                        photoRecyclerView.height.toFloat(),
+                        0.0f
                     ).apply {
                         duration = 200
                         fillAfter = true
@@ -173,13 +172,12 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
             setRecyclerView(trip)
 
             singleTripDistanceTextView.append(
-                    "${trip.totalDistance.toString().take(6)} ${getString(R.string.text_distance_units)}"
+                "${trip.totalDistance.toString().take(6)} ${getString(R.string.text_distance_units)}"
             )
         }
     }
 
     override fun onClick(photoPath: String) {
-        // TODO: Change dialog to a Fragment with a FragmentStatePagerAdapter to thumb through photos
         PhotoDialog(requireContext(), trip, photoPath).show()
     }
 

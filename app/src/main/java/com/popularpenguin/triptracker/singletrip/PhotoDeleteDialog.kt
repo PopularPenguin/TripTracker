@@ -1,8 +1,10 @@
 package com.popularpenguin.triptracker.singletrip
 
 import android.content.Context
+import android.content.DialogInterface
 import android.net.Uri
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
@@ -28,8 +30,16 @@ class PhotoDeleteDialog(context: Context, adapter: PhotoAdapter, position: Int, 
 
             dialog.dismiss()
         }
+        .create()
 
     fun show() {
-        dialog.show()
+        dialog.apply {
+            setOnShowListener {
+                (it as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
+                    .setTextColor(ContextCompat.getColor(context, R.color.red))
+            }
+
+            show()
+        }
     }
 }

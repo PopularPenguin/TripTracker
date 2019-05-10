@@ -25,7 +25,8 @@ class PhotoDeleteDialog(context: Context, adapter: PhotoAdapter, position: Int, 
             GlobalScope.launch(Dispatchers.IO) {
                 context.contentResolver.delete(photoUri, null, null)
                 adapter.removeItem(position)
-                AppDatabase.get(context).dao()
+                AppDatabase.get(context)
+                    .dao()
                     .update(trip)
             }
 

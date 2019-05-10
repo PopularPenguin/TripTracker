@@ -21,7 +21,10 @@ import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.map.UserLocation
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.android.synthetic.main.fragment_single_trip_map.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick {
 
@@ -177,7 +180,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
 
     override fun onClick(photoPath: String) {
         // TODO: Change dialog to a Fragment with a FragmentStatePagerAdapter to thumb through photos
-        PhotoDialog(requireContext(), photoPath).show()
+        PhotoDialog(requireContext(), trip, photoPath).show()
     }
 
     override fun onLongClick(adapter: PhotoAdapter, position: Int, trip: Trip) {

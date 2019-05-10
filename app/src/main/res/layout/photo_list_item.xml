@@ -3,5 +3,5 @@
            android:id="@+id/singleTripPhotoView"
            android:layout_width="120dp"
            android:layout_height="match_parent"
-           android:layout_marginEnd="2dp"
+           android:layout_margin="1dp"
            android:scaleType="centerCrop"/>

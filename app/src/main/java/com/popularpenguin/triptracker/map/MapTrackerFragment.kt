@@ -29,6 +29,7 @@ class MapTrackerFragment: Fragment() {
             addCameraListener(trackerCameraFab)
             addControlListener(trackerControlFab)
             addZoomListener(trackerZoomFab)
+            addMapTypeListener(trackerMapTypeFab)
         }
     }
 

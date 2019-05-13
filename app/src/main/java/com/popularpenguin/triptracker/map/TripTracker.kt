@@ -47,6 +47,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     private val locationList = mutableListOf<LatLng>()
     private val serviceConnection = TrackerNotification.getServiceConnection(fragment.requireContext())
     private val photoList = mutableListOf<String>()
+    private val photoMarkerList = mutableListOf<LatLng>()
     private val uriList = mutableListOf<Uri>()
 
     private lateinit var map: GoogleMap
@@ -177,8 +178,18 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         }
     }
 
+    fun addMapTypeListener(typeView: View) {
+        typeView.setOnClickListener {
+            if (map.mapType == GoogleMap.MAP_TYPE_TERRAIN) {
+                map.mapType = GoogleMap.MAP_TYPE_HYBRID
+            } else {
+                map.mapType = GoogleMap.MAP_TYPE_TERRAIN
+            }
+        }
+    }
+
     fun storePhoto() {
-        // TODO: Move to coroutine if this operation is noticably slow?
+        // TODO: Move to co-routine if this operation is noticeably slow?
         val activity = fragment.requireActivity()
         val uri = FileProvider.getUriForFile(
             activity,
@@ -206,10 +217,11 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         )
 
         photoList.add("file://${photoFile.absolutePath}")
+        if (locationList.isNotEmpty()) {
+            photoMarkerList.add(locationList.last())
+        }
 
         outputStream.close()
-
-        // TODO: Get current location and add a marker for where the photo was taken?
     }
 
     private fun showSaveDialog() {
@@ -246,6 +258,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 date = Date()
                 description = dialogDescription
                 photoList = this@TripTracker.photoList
+                photoMarkerList = this@TripTracker.photoMarkerList
                 points = locationList
                 totalDistance = this@TripTracker.distance
                 uriList = this@TripTracker.uriList
@@ -306,9 +319,12 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap.apply {
+            mapType = GoogleMap.MAP_TYPE_TERRAIN
+
             try {
                 isMyLocationEnabled = true
                 uiSettings.isMyLocationButtonEnabled = false
+                uiSettings.isMapToolbarEnabled = false
             } catch (e: SecurityException) {
                 e.printStackTrace()
             }

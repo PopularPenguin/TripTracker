@@ -1,6 +1,7 @@
 package com.popularpenguin.triptracker.singletrip
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +13,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.data.Trip
@@ -45,6 +44,8 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
     private lateinit var map: GoogleMap
     private lateinit var trip: Trip
 
+    private var photoMarkerMap = mutableMapOf<String, Marker>()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_single_trip_map, container, false)
     }
@@ -72,7 +73,10 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
+        map = googleMap.apply {
+            mapType = GoogleMap.MAP_TYPE_TERRAIN
+            uiSettings.isMapToolbarEnabled = false
+        }
 
         GlobalScope.launch(Dispatchers.Main) {
             val uid = arguments!!.getInt(ID_KEY)
@@ -81,6 +85,9 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                     .dao()
                     .loadById(uid)
             }
+
+            Log.d("SingleTripFragment", "MarkerList size = ${trip.photoMarkerList.size}")
+            Log.d("SingleTripFragment", "MarkerList[0] contents = ${trip.photoMarkerList[0]}")
 
             map.apply {
                 // Add the polylines for the entire trip
@@ -94,6 +101,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                         .title(getString(R.string.marker_start))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                 )
+
                 // Add the trip's end point if there is more than 0.1 miles between the start and end points
                 val distanceBetweenStartAndEnd = SphericalUtil.computeDistanceBetween(
                     trip.points.first(),
@@ -109,7 +117,27 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                     )
                 }
 
-                animateCamera(CameraUpdateFactory.newLatLngZoom(trip.points.first(), UserLocation.ZOOM))
+                // Add markers for the location of each photo taken
+                for ((index, latLng) in trip.photoMarkerList.withIndex()) {
+                    val marker = addMarker(
+                        MarkerOptions()
+                            .position(latLng)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                    ).apply {
+                        tag = trip.photoList[index]
+                        setOnMarkerClickListener {
+                            if (it.tag != null) {
+                                onClick(it.tag as String)
+                            }
+
+                            false
+                        }
+                    }
+
+                    photoMarkerMap[trip.photoList[index]] = marker
+                }
+
+                moveCamera(CameraUpdateFactory.newLatLngZoom(trip.points.first(), UserLocation.ZOOM))
 
                 // hide the distance view when the camera moves
                 setOnCameraMoveStartedListener {
@@ -169,6 +197,14 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(trip.points.first(), UserLocation.ZOOM))
             }
 
+            singleTripMapTypeFab.setOnClickListener {
+                if (map.mapType == GoogleMap.MAP_TYPE_TERRAIN) {
+                    map.mapType = GoogleMap.MAP_TYPE_HYBRID
+                } else {
+                    map.mapType = GoogleMap.MAP_TYPE_TERRAIN
+                }
+            }
+
             setRecyclerView(trip)
 
             singleTripDistanceTextView.append(
@@ -182,6 +218,17 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
     }
 
     override fun onLongClick(adapter: PhotoAdapter, position: Int, trip: Trip) {
-        PhotoDeleteDialog(requireContext(), adapter, position, trip, trip.uriList[position]).show()
+        val dialog = PhotoDeleteDialog(
+            requireContext(),
+            adapter, position,
+            trip,
+            trip.uriList[position]
+        ).apply {
+            show()
+        }
+
+        if (dialog.photoDeleted) {
+            photoMarkerMap.remove(trip.photoList[position]) // TODO: Test this functionality
+        }
     }
 }

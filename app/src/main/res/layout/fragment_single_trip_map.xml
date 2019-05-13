@@ -46,18 +46,24 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/singleTripZoomFab"
-        android:layout_width="@dimen/fab_size_small"
-        android:layout_height="@dimen/fab_size_small"
+        style="@style/SmallFabTheme"
         android:layout_marginTop="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:elevation="@dimen/fab_elevation"
-        android:scaleType="center"
-        android:translationZ="@dimen/fab_z"
         app:backgroundTint="@color/transparentWhite"
-        app:fabSize="mini"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:rippleColor="@color/transparentGray"
         app:srcCompat="@android:drawable/ic_menu_zoom" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/singleTripMapTypeFab"
+        style="@style/SmallFabTheme"
+        android:layout_marginTop="@dimen/fab_margin"
+        app:backgroundTint="@color/transparentWhite"
+        app:rippleColor="@color/transparentGray"
+        app:srcCompat="@android:drawable/ic_menu_mapmode"
+        app:layout_constraintTop_toBottomOf="@id/singleTripZoomFab"
+        app:layout_constraintStart_toStartOf="@id/singleTripZoomFab"
+        app:layout_constraintEnd_toEndOf="@id/singleTripZoomFab"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

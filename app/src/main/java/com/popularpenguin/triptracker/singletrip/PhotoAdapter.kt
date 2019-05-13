@@ -37,6 +37,7 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
         notifyItemRemoved(position)
 
         trip.photoList.removeAt(position)
+        trip.photoMarkerList.removeAt(position)
         trip.uriList.removeAt(position)
     }
 

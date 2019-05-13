@@ -30,9 +30,12 @@ class PhotoDeleteDialog(context: Context, adapter: PhotoAdapter, position: Int, 
                     .update(trip)
             }
 
+            photoDeleted = true
             dialog.dismiss()
         }
         .create()
+
+    var photoDeleted = false
 
     fun show() {
         dialog.apply {

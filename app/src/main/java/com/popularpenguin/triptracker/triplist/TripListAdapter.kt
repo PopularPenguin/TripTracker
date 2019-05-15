@@ -48,8 +48,11 @@ class TripListAdapter(private val tripList: MutableList<Trip>, private val handl
 
         fun bind(trip: Trip) {
             with (itemView) {
-                val distance = trip.totalDistance.toString().take(6)
-                listDescriptionView.text = "${trip.description},\n$distance miles"
+                val description = trip.description
+                    .take(45) +
+                        "..."
+
+                listDescriptionView.text = description
                 listDateView.text = trip.getFormattedDate()
             }
 

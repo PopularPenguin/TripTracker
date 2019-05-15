@@ -189,7 +189,6 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     }
 
     fun storePhoto() {
-        // TODO: Move to co-routine if this operation is noticeably slow?
         val activity = fragment.requireActivity()
         val uri = FileProvider.getUriForFile(
             activity,
@@ -200,28 +199,30 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
         activity.revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 
-        val bitmap = BitmapFactory.decodeFile(photoFile.path)
-        val outputStream = FileOutputStream(photoFile)
+        GlobalScope.launch(Dispatchers.IO) {
+            val bitmap = BitmapFactory.decodeFile(photoFile.path)
+            val outputStream = FileOutputStream(photoFile)
 
-        // rotate the bitmap 90 degrees
-        val matrix = Matrix().apply { postRotate(90.0f) }
-        val finalBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+            // rotate the bitmap 90 degrees
+            val matrix = Matrix().apply { postRotate(90.0f) }
+            val finalBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
 
-        // compress and save to gallery
-        finalBitmap.compress(Bitmap.CompressFormat.JPEG, 95, outputStream)
-        MediaStore.Images.Media.insertImage(
-            activity.contentResolver,
-            finalBitmap,
-            photoFile.name,
-            photoFile.name
-        )
+            // compress and save to gallery
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 95, outputStream)
+            MediaStore.Images.Media.insertImage(
+                activity.contentResolver,
+                finalBitmap,
+                photoFile.name,
+                photoFile.name
+            )
 
-        photoList.add("file://${photoFile.absolutePath}")
-        if (locationList.isNotEmpty()) {
-            photoMarkerList.add(locationList.last())
+            photoList.add("file://${photoFile.absolutePath}")
+            if (locationList.isNotEmpty()) {
+                photoMarkerList.add(locationList.last())
+            }
+
+            outputStream.close()
         }
-
-        outputStream.close()
     }
 
     private fun showSaveDialog() {

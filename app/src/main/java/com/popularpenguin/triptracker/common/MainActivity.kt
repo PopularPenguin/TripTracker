@@ -16,10 +16,6 @@ class MainActivity : AppCompatActivity() {
 
         // Set the fragment to the first screen of the app
         ScreenNavigator(supportFragmentManager).loadTripList()
-    }
-
-    override fun onResume() {
-        super.onResume()
 
         // check permissions
         PermissionValidator(this).requestPermissions()

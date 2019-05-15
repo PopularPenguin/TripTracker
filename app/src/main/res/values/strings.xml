@@ -40,6 +40,11 @@
     <string name="notification_title">Trip Tracker</string>
     <string name="notification_content">Tracker is running</string>
 
+    <!-- Permissions -->
+    <string name="permissions_single_trip">You must enable the storage permission in your app settings</string>
+    <string name="permissions_tracker">You must enable location and storage permissions in your app settings</string>
+    <string name="snackbar_settings">Open Settings</string>
+
     <!-- Snackbar -->
     <string name="snackbar_photo_caption">Caption photo set</string>
     <string name="snackbar_undo">Undo</string>

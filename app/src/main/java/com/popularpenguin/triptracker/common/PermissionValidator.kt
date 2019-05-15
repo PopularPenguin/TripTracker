@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.net.Uri
 import android.provider.Settings
 import android.view.View
 import androidx.core.app.ActivityCompat
@@ -13,6 +14,24 @@ import com.google.android.material.snackbar.Snackbar
 import com.popularpenguin.triptracker.R
 
 class PermissionValidator(private val activity: Activity) {
+
+    val settingsIntent = Intent().apply {
+        action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        data = Uri.fromParts("package", activity.packageName, null)
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    }
+
+    fun checkAllPermissions(): Boolean {
+        return ((ContextCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) &&
+                ContextCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_GRANTED)
+    }
+
+    fun checkStoragePermission(): Boolean {
+        return (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_GRANTED)
+    }
 
     fun requestPermissions() {
         requestLocation()
@@ -43,7 +62,6 @@ class PermissionValidator(private val activity: Activity) {
         }
     }
 
-    // TODO: Request storage permission, check this
     private fun requestStorage() {
         if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED) {

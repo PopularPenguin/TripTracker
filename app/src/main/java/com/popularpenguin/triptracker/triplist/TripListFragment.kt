@@ -10,8 +10,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.popularpenguin.triptracker.R
+import com.popularpenguin.triptracker.common.PermissionValidator
 import com.popularpenguin.triptracker.common.ScreenNavigator
+import com.popularpenguin.triptracker.common.TripSnackbar
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.android.synthetic.main.fragment_trip_list.*
@@ -31,6 +34,8 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
 
     private var startDate = 0L // Unix-time of earliest trip to load
     private var endDate = 0L // Unix-time of latest trip to load
+
+    private lateinit var permissionValidator: PermissionValidator
 
     // TODO: Refactor into a separate class?
     private val showDatePickerListener = View.OnClickListener {
@@ -69,6 +74,8 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        permissionValidator = PermissionValidator(requireActivity())
+
         setRecyclerView()
 
         showAllFab.setOnClickListener {
@@ -89,7 +96,15 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
         endDateFab.setOnClickListener(showDatePickerListener)
 
         newTripFab.setOnClickListener {
-            ScreenNavigator(requireActivity().supportFragmentManager).loadMapTracker()
+            if (permissionValidator.checkAllPermissions()) {
+                ScreenNavigator(requireActivity().supportFragmentManager).loadMapTracker()
+            } else {
+                TripSnackbar(newTripFab, R.string.permissions_tracker, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.snackbar_settings) {
+                        startActivity(permissionValidator.settingsIntent)
+                    }
+                    .show()
+            }
         }
     }
 
@@ -139,7 +154,15 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     }
 
     override fun onClick(uid: Int) {
-        ScreenNavigator(requireActivity().supportFragmentManager).loadSingleTrip(uid)
+        if (permissionValidator.checkStoragePermission()) {
+            ScreenNavigator(requireActivity().supportFragmentManager).loadSingleTrip(uid)
+        } else {
+            TripSnackbar(newTripFab, R.string.permissions_single_trip, Snackbar.LENGTH_LONG)
+                .setAction(R.string.snackbar_settings) {
+                    startActivity(permissionValidator.settingsIntent)
+                }
+                .show()
+        }
     }
 
     override fun onLongClick(adapter: TripListAdapter, position: Int, trip: Trip) {

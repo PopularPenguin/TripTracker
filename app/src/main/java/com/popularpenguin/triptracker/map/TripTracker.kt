@@ -75,18 +75,23 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     }
 
     fun onPause() {
+        /*
         if (!isRunning) return
 
         location.apply {
             removeListener(this@TripTracker)
             stopLocationUpdates()
-        }
+        } */
     }
 
     fun onDestroy() {
         Log.d("TripTracker", "onDestroy()")
 
         if (!isFinished && isRunning) {
+            location.apply {
+                removeListener(this@TripTracker)
+                stopLocationUpdates()
+            }
             fragment.requireActivity().apply {
                 unbindService(serviceConnection)
                 stopService(Intent(this, TrackerNotification::class.java))

@@ -58,14 +58,10 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
         }
 
         override fun onClick(view: View) {
-            // Display the photo clicked in full screen
-            // ...
-
             handler.onClick(trip.photoList[adapterPosition])
         }
 
         override fun onLongClick(view: View): Boolean {
-            // Delete the photo? Could delete this method
             handler.onLongClick(
                     this@PhotoAdapter,
                     adapterPosition,

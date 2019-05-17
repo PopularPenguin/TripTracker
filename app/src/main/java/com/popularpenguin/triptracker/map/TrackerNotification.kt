@@ -28,7 +28,11 @@ class TrackerNotification : Service() {
                 override fun onServiceConnected(className: ComponentName?, binder: IBinder) {
                     service = (binder as NotificationBinder).service
 
-                    service.startService(Intent(context, TrackerNotification::class.java))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        service.startForegroundService(Intent(context, TrackerNotification::class.java))
+                    } else {
+                        service.startService(Intent(context, TrackerNotification::class.java))
+                    }
                 }
 
                 override fun onServiceDisconnected(className: ComponentName?) { }

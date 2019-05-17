@@ -134,8 +134,12 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                         }
                     }
 
+                    Log.d("SingleTripFragment", trip.photoList[index])
+
                     photoMarkerMap[trip.photoList[index]] = marker
                 }
+
+                Log.d("SingleTripFragment", "map size = ${photoMarkerMap.size}")
 
                 moveCamera(CameraUpdateFactory.newLatLngZoom(trip.points.first(), UserLocation.ZOOM))
 
@@ -218,17 +222,24 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
     }
 
     override fun onLongClick(adapter: PhotoAdapter, position: Int, trip: Trip) {
-        val dialog = PhotoDeleteDialog(
-            requireContext(),
-            adapter, position,
-            trip,
-            trip.uriList[position]
-        ).apply {
-            show()
-        }
+        PhotoDeleteDialog(requireContext()).apply {
+            setOnDismissListener {
+                val key = trip.photoList[position]
+                val marker = photoMarkerMap[key]
 
-        if (dialog.photoDeleted) {
-            photoMarkerMap.remove(trip.photoList[position]) // TODO: Test this functionality
+                marker?.remove()
+                photoMarkerMap.remove(key)
+
+                GlobalScope.launch(Dispatchers.IO) {
+                    requireContext().contentResolver.delete(trip.uriList[position], null, null)
+                    adapter.removeItem(position)
+                    AppDatabase.get(requireContext())
+                        .dao()
+                        .update(trip)
+                }
+            }
+
+            show()
         }
     }
 }

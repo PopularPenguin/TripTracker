@@ -12,30 +12,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class PhotoDeleteDialog(context: Context, adapter: PhotoAdapter, position: Int, trip: Trip, photoUri: Uri) {
+class PhotoDeleteDialog(context: Context) {
 
     private val dialog = AlertDialog.Builder(context, R.style.DialogTheme)
         .setTitle(R.string.dialog_photo_delete_title)
         .setMessage(R.string.dialog_photo_delete_message)
         .setIcon(R.drawable.ic_launcher_foreground) // TODO: Change to app icon
         .setNegativeButton(R.string.dialog_photo_delete_negative) { dialog, _ ->
-            dialog.dismiss()
+            dialog.cancel()
         }
         .setPositiveButton(R.string.dialog_photo_delete_positive) { dialog, _ ->
-            GlobalScope.launch(Dispatchers.IO) {
-                context.contentResolver.delete(photoUri, null, null)
-                adapter.removeItem(position)
-                AppDatabase.get(context)
-                    .dao()
-                    .update(trip)
-            }
-
-            photoDeleted = true
             dialog.dismiss()
         }
         .create()
 
-    var photoDeleted = false
+    fun setOnDismissListener(listener: ((DialogInterface) -> Unit)) {
+        dialog.setOnDismissListener(listener)
+    }
 
     fun show() {
         dialog.apply {

@@ -85,6 +85,8 @@ class TrackerNotification : Service() {
             .build()
 
         notificationManager.notify(notificationId, notification)
+
+        startForeground(notificationId, notification)
     }
 
     private fun cancel() {

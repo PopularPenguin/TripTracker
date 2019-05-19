@@ -7,8 +7,8 @@ import com.google.android.gms.maps.model.LatLng
 class UserLocation(context: Context) {
 
     companion object {
-        const val INTERVAL = 10000L
-        const val FASTEST_INTERVAL = 5000L
+        const val INTERVAL = 30_000L
+        const val FASTEST_INTERVAL = 10_000L
         const val ZOOM = 15.0f
     }
 

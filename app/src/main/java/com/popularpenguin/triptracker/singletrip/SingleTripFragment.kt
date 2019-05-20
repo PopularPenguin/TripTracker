@@ -141,7 +141,10 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                     }
                 }
 
-                moveCamera(CameraUpdateFactory.newLatLngZoom(trip.points.first(), UserLocation.ZOOM))
+                val latLngBuilder = LatLngBounds.Builder()
+
+                trip.points.forEach { latLngBuilder.include(it) }
+                moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 300 /* padding */))
 
                 // hide the distance view when the camera moves
                 setOnCameraMoveStartedListener {

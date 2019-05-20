@@ -102,13 +102,13 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                 )
 
-                // Add the trip's end point if there is more than 0.1 miles between the start and end points
+                // Add the trip's end point if there is more than 0.01 miles between the start and end points
                 val distanceBetweenStartAndEnd = SphericalUtil.computeDistanceBetween(
                     trip.points.first(),
                     trip.points.last()
                 ) * 0.000621371 // meters to miles
 
-                if (distanceBetweenStartAndEnd > 0.1 /* miles */) {
+                if (distanceBetweenStartAndEnd > 0.01 /* miles */) {
                     addMarker(
                         MarkerOptions()
                             .position(trip.points.last())
@@ -118,28 +118,28 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 }
 
                 // Add markers for the location of each photo taken
-                for ((index, latLng) in trip.photoMarkerList.withIndex()) {
-                    val marker = addMarker(
-                        MarkerOptions()
-                            .position(latLng)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                    ).apply {
-                        tag = trip.photoList[index]
-                        setOnMarkerClickListener {
-                            if (it.tag != null) {
-                                onClick(it.tag as String)
+                if (trip.photoList.isNotEmpty()) {
+                    for ((index, latLng) in trip.photoMarkerList.withIndex()) {
+                        val marker = addMarker(
+                            MarkerOptions()
+                                .position(latLng)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                        ).apply {
+                            tag = trip.photoList[index]
+                            setOnMarkerClickListener {
+                                if (it.tag != null) {
+                                    onClick(it.tag as String)
+                                }
+
+                                false
                             }
-
-                            false
                         }
+
+                        Log.d("SingleTripFragment", trip.photoList[index])
+
+                        photoMarkerMap[trip.photoList[index]] = marker
                     }
-
-                    Log.d("SingleTripFragment", trip.photoList[index])
-
-                    photoMarkerMap[trip.photoList[index]] = marker
                 }
-
-                Log.d("SingleTripFragment", "map size = ${photoMarkerMap.size}")
 
                 moveCamera(CameraUpdateFactory.newLatLngZoom(trip.points.first(), UserLocation.ZOOM))
 

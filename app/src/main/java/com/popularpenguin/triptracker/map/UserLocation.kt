@@ -3,6 +3,7 @@ package com.popularpenguin.triptracker.map
 import android.content.Context
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.SphericalUtil
 
 class UserLocation(context: Context) {
 
@@ -32,6 +33,22 @@ class UserLocation(context: Context) {
 
             val location = locationResult.lastLocation
             val latLng = LatLng(location.latitude, location.longitude)
+            val size = locationResult.locations.size
+
+            // Check if the user moved at least 6 meters before sending the location result
+            // TODO: Test this
+            if (size > 1) {
+                val previousLocation = locationResult.locations[size - 2]
+                val previousLatLng = LatLng(previousLocation.latitude, previousLocation.longitude)
+                val distance = SphericalUtil.computeDistanceBetween(previousLatLng, latLng)
+
+                if (distance < 6.0) {
+                    // remove the current location from the list as it isn't far enough
+                    locationResult.locations.remove(location)
+
+                    return
+                } // Return if the user hasn't moved at least 6 meters
+            }
 
             userLocationListeners.forEach { it.onLocationUpdated(latLng, ZOOM) }
         }

@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Matrix
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
@@ -208,15 +207,11 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
             val bitmap = BitmapFactory.decodeFile(photoFile.path)
             val outputStream = FileOutputStream(photoFile)
 
-            // rotate the bitmap 90 degrees
-            val matrix = Matrix().apply { postRotate(90.0f) }
-            val finalBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-
             // compress and save to gallery
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 95, outputStream)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, outputStream)
             MediaStore.Images.Media.insertImage(
                 activity.contentResolver,
-                finalBitmap,
+                bitmap,
                 photoFile.name,
                 photoFile.name
             )

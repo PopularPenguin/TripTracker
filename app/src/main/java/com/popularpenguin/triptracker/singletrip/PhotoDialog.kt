@@ -2,12 +2,7 @@ package com.popularpenguin.triptracker.singletrip
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Typeface
 import android.view.Window
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.popularpenguin.triptracker.R

@@ -2,15 +2,9 @@ package com.popularpenguin.triptracker.singletrip
 
 import android.content.Context
 import android.content.DialogInterface
-import android.net.Uri
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.popularpenguin.triptracker.R
-import com.popularpenguin.triptracker.data.Trip
-import com.popularpenguin.triptracker.room.AppDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class PhotoDeleteDialog(context: Context) {
 

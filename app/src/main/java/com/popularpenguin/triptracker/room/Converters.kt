@@ -82,6 +82,22 @@ class Converters {
 
         @TypeConverter
         @JvmStatic
+        fun fromUri(uri: Uri?): String {
+            return uri?.toString() ?: ""
+        }
+
+        @TypeConverter
+        @JvmStatic
+        fun toUri(str: String): Uri? {
+            return if (str.isEmpty()) {
+                null
+            } else {
+                Uri.parse(str)
+            }
+        }
+
+        @TypeConverter
+        @JvmStatic
         fun fromUriList(uriList: List<Uri>): String {
             val sb = StringBuilder()
 

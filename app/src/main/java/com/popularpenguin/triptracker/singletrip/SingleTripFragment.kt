@@ -1,5 +1,6 @@
 package com.popularpenguin.triptracker.singletrip
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -118,17 +119,17 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 }
 
                 // Add markers for the location of each photo taken
-                if (trip.photoList.isNotEmpty()) {
+                if (trip.uriList.isNotEmpty()) {
                     for ((index, latLng) in trip.photoMarkerList.withIndex()) {
                         val marker = addMarker(
                             MarkerOptions()
                                 .position(latLng)
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                         ).apply {
-                            tag = trip.photoList[index]
+                            tag = trip.uriList[index]
                             setOnMarkerClickListener {
                                 if (it.tag != null) {
-                                    onClick(it.tag as String)
+                                    onClick(it.tag as Uri)
                                 }
 
                                 false
@@ -220,8 +221,8 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
         }
     }
 
-    override fun onClick(photoPath: String) {
-        PhotoDialog(requireContext(), trip, photoPath).show()
+    override fun onClick(photoUri: Uri) {
+        PhotoDialog(requireContext(), trip, photoUri).show()
     }
 
     override fun onLongClick(adapter: PhotoAdapter, position: Int, trip: Trip) {

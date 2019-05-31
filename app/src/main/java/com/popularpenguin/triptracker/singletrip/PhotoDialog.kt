@@ -2,20 +2,21 @@ package com.popularpenguin.triptracker.singletrip
 
 import android.app.Dialog
 import android.content.Context
+import android.net.Uri
 import android.view.Window
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.popularpenguin.triptracker.R
+import com.popularpenguin.triptracker.common.ImageLoader
 import com.popularpenguin.triptracker.common.TripSnackbar
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.dialog_display_photo.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class PhotoDialog(context: Context, private val trip: Trip, private val photoPath: String) {
+class PhotoDialog(context: Context, private val trip: Trip, private val photoUri: Uri) {
 
     private val dialog = Dialog(context, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen).apply {
         window?.requestFeature(Window.FEATURE_NO_TITLE)
@@ -34,9 +35,8 @@ class PhotoDialog(context: Context, private val trip: Trip, private val photoPat
     }
 
     fun show() {
-        Picasso.get()
-            .load(photoPath)
-            .into(photoView)
+        ImageLoader(photoUri)
+            .load(photoView)
 
         dialog.show()
     }
@@ -46,7 +46,7 @@ class PhotoDialog(context: Context, private val trip: Trip, private val photoPat
         val previousCaptionPhoto = trip.captionPhoto
 
         GlobalScope.launch(Dispatchers.IO) {
-            trip.captionPhoto = photoPath
+            trip.captionPhoto = photoUri
             dao.update(trip)
         }
 

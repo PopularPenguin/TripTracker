@@ -1,19 +1,20 @@
 package com.popularpenguin.triptracker.singletrip
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.popularpenguin.triptracker.R
+import com.popularpenguin.triptracker.common.ImageLoader
 import com.popularpenguin.triptracker.data.Trip
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.photo_list_item.view.*
 
 class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
     RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
 
     interface OnClick {
-        fun onClick(photoPath: String)
+        fun onClick(photoUri: Uri)
         fun onLongClick(adapter: PhotoAdapter, position: Int, trip: Trip)
     }
 
@@ -25,8 +26,8 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        val photoPath = trip.photoList[position]
-        holder.bind(photoPath)
+        val photoUri = trip.uriList[position]
+        holder.bind(photoUri)
     }
 
     override fun getItemCount(): Int = trip.photoList.size
@@ -48,15 +49,13 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
             itemView.setOnLongClickListener(this)
         }
 
-        fun bind(photoPath: String) {
-            Picasso.get()
-                .load(photoPath)
-                .fit()
-                .into(itemView.singleTripPhotoView)
+        fun bind(photoUri: Uri) {
+            ImageLoader(photoUri)
+                .load(itemView.singleTripPhotoView, true)
         }
 
         override fun onClick(view: View) {
-            handler.onClick(trip.photoList[adapterPosition])
+            handler.onClick(trip.uriList[adapterPosition])
         }
 
         override fun onLongClick(view: View): Boolean {

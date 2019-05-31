@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
@@ -25,6 +23,7 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
+import com.popularpenguin.triptracker.common.ImageLoader
 import com.popularpenguin.triptracker.common.ScreenNavigator
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
@@ -32,7 +31,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
-import java.io.FileOutputStream
 import java.util.*
 
 /** Class to combine the map and location functions to draw a trip session */
@@ -204,24 +202,11 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         activity.revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 
         GlobalScope.launch(Dispatchers.IO) {
-            val bitmap = BitmapFactory.decodeFile(photoFile.path)
-            val outputStream = FileOutputStream(photoFile)
-
-            // compress and save to gallery
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, outputStream)
-            MediaStore.Images.Media.insertImage(
-                activity.contentResolver,
-                bitmap,
-                photoFile.name,
-                photoFile.name
-            )
-
+            ImageLoader.storePhoto(activity.contentResolver, uri, photoFile)
             photoList.add("file://${photoFile.absolutePath}")
             if (locationList.isNotEmpty()) {
                 photoMarkerList.add(locationList.last())
             }
-
-            outputStream.close()
         }
     }
 

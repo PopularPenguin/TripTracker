@@ -138,9 +138,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                             }
                         }
 
-                        Log.d("SingleTripFragment", trip.photoList[index])
-
-                        photoMarkerMap[trip.photoList[index]] = marker
+                        photoMarkerMap["${trip.uriList[index]}"] = marker
                     }
                 }
 
@@ -230,7 +228,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
     override fun onLongClick(adapter: PhotoAdapter, position: Int, trip: Trip) {
         PhotoDeleteDialog(requireContext()).apply {
             setOnDismissListener {
-                val key = trip.photoList[position]
+                val key = "${trip.uriList[position]}"
                 val marker = photoMarkerMap[key]
 
                 marker?.remove()

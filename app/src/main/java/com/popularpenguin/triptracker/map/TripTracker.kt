@@ -243,7 +243,6 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
             val trip = Trip().apply {
                 date = Date()
                 description = dialogDescription
-                photoList = this@TripTracker.photoList
                 photoMarkerList = this@TripTracker.photoMarkerList
                 points = locationList
                 totalDistance = this@TripTracker.distance

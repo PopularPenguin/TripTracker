@@ -30,12 +30,11 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
         holder.bind(photoUri)
     }
 
-    override fun getItemCount(): Int = trip.photoList.size
+    override fun getItemCount(): Int = trip.uriList.size
 
     fun removeItem(position: Int) {
         notifyItemRemoved(position)
 
-        trip.photoList.removeAt(position)
         trip.photoMarkerList.removeAt(position)
         trip.uriList.removeAt(position)
     }

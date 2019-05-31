@@ -16,7 +16,6 @@ class Trip() {
     var description = ""
     var points = mutableListOf<LatLng>()
     var captionPhoto: Uri? = null // displayed in TripList, if empty, first photo from photoList is shown
-    var photoList = mutableListOf<String>() // list of photo links for display in single trip
     var photoMarkerList = mutableListOf<LatLng>() // list of photo location markers
     @ColumnInfo(name = "total_distance") var totalDistance = 0.0
     var uriList = mutableListOf<Uri>()
@@ -27,7 +26,6 @@ class Trip() {
         date: Date,
         points: MutableList<LatLng>,
         captionPhoto: Uri?,
-        photoList: MutableList<String>,
         photoMarkerList: MutableList<LatLng>,
         distance: Double,
         uriList: MutableList<Uri>
@@ -37,7 +35,6 @@ class Trip() {
         this.date = date
         this.points = points
         this.captionPhoto = captionPhoto
-        this.photoList = photoList
         this.photoMarkerList = photoMarkerList
         totalDistance = distance
         this.uriList = uriList

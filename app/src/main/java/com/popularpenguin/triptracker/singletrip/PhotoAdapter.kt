@@ -50,8 +50,7 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
         }
 
         fun bind(photoUri: Uri) {
-            ImageLoader(photoUri)
-                .load(itemView.singleTripPhotoView, true)
+            ImageLoader.load(photoUri, itemView.singleTripPhotoView, true)
         }
 
         override fun onClick(view: View) {

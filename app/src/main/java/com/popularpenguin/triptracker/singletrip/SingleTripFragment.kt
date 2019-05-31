@@ -101,6 +101,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                         .position(trip.points.first())
                         .title(getString(R.string.marker_start))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                        .zIndex(1.0f)
                 )
 
                 // Add the trip's end point if there is more than 0.01 miles between the start and end points
@@ -115,6 +116,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                             .position(trip.points.last())
                             .title(getString(R.string.marker_end))
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                            .zIndex(1.0f)
                     )
                 }
 

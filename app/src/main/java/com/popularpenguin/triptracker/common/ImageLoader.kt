@@ -19,9 +19,19 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class ImageLoader(private val uri: Uri) {
+class ImageLoader {
 
     companion object {
+        fun load(photoUri: Uri, view: ImageView, fit: Boolean = false) {
+            val request = Picasso.get().load(photoUri) // TODO: Add placeholder and error images
+
+            if (fit) {
+                request.fit()
+            }
+
+            request.into(view)
+        }
+
         fun storePhoto(contentResolver: ContentResolver, photoUri: Uri, photoFile: File) {
             val rotation = getRotation(contentResolver, photoUri)
             val matrix = Matrix().apply { postRotate(rotation) }
@@ -41,7 +51,7 @@ class ImageLoader(private val uri: Uri) {
                     try {
                         metadata = ImageMetadataReader.readMetadata(BufferedInputStream(inputStream))
                     } catch (e: ImageProcessingException) {
-                        // ...
+                        e.printStackTrace()
                     }
 
                     if (metadata != null) {
@@ -52,7 +62,7 @@ class ImageLoader(private val uri: Uri) {
                             try {
                                 orientation = exifIFD0Directory.getInt(ExifIFD0Directory.TAG_ORIENTATION)
                             } catch (e: MetadataException) {
-                                // ...
+                                e.printStackTrace()
                             }
                         }
                     }
@@ -88,15 +98,5 @@ class ImageLoader(private val uri: Uri) {
                 outputStream?.close()
             }
         }
-    }
-
-    fun load(view: ImageView, fit: Boolean = false) {
-        val request = Picasso.get().load(uri)
-
-        if (fit) {
-            request.fit()
-        }
-
-        request.into(view)
     }
 }

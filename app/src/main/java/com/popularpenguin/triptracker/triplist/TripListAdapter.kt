@@ -57,15 +57,14 @@ class TripListAdapter(private val tripList: MutableList<Trip>, private val handl
                 listDateView.text = trip.getFormattedDate()
             }
 
-            val photo = when {
+            val photoUri = when {
                 trip.captionPhoto != null -> trip.captionPhoto
                 trip.uriList.isNotEmpty() -> trip.uriList[0]
                 else -> null
             }
 
-            if (photo != null) {
-                ImageLoader(trip.uriList[0])
-                    .load(itemView.listImageView, true)
+            if (photoUri != null) {
+                ImageLoader.load(photoUri, itemView.listImageView, true)
             }
         }
 

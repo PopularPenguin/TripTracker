@@ -35,8 +35,7 @@ class PhotoDialog(context: Context, private val trip: Trip, private val photoUri
     }
 
     fun show() {
-        ImageLoader(photoUri)
-            .load(photoView)
+        ImageLoader.load(photoUri, photoView)
 
         dialog.show()
     }

@@ -12,7 +12,7 @@
 
     <!-- Dialog Photo Delete -->
     <string name="dialog_photo_delete_title">Delete Photo</string>
-    <string name="dialog_photo_delete_message">Delete this photo? This action will remove the photo from your device.</string>
+    <string name="dialog_photo_delete_message">Remove this photo? This action will not remove the photo from your device.</string>
     <string name="dialog_photo_delete_positive">Delete</string>
     <string name="dialog_photo_delete_negative">Cancel</string>
 
@@ -41,8 +41,9 @@
     <string name="notification_content">Tracker is running</string>
 
     <!-- Permissions -->
-    <string name="permissions_single_trip">You must enable the storage permission in your app settings</string>
-    <string name="permissions_tracker">You must enable location and storage permissions in your app settings</string>
+    <string name="permissions_gps">You must enable gps.</string>
+    <string name="permissions_storage">You must enable the storage permission.</string>
+    <string name="permissions_tracker">You must enable location and storage permissions.</string>
     <string name="snackbar_settings">Open Settings</string>
 
     <!-- Snackbar -->

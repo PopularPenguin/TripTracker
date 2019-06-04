@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -21,10 +22,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.ImageLoader
+import com.popularpenguin.triptracker.common.PermissionValidator
 import com.popularpenguin.triptracker.common.ScreenNavigator
+import com.popularpenguin.triptracker.common.TripSnackbar
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.coroutines.Dispatchers
@@ -98,6 +102,17 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
     fun addCameraListener(cameraView: View) {
         cameraView.setOnClickListener {
+            if (!PermissionValidator(fragment.requireActivity()).checkStoragePermission()) {
+                TripSnackbar(cameraView, R.string.permissions_storage, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.snackbar_settings) {
+                        val permissionValidator = PermissionValidator(fragment.requireActivity())
+
+                        fragment.startActivity(permissionValidator.settingsIntent)
+                    }.show()
+
+                return@setOnClickListener
+            }
+
             val filesDir = fragment.requireContext().filesDir
             val fileName = "${System.currentTimeMillis()}.jpg"
             photoFile = File(filesDir, fileName)

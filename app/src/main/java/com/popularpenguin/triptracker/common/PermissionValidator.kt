@@ -34,16 +34,15 @@ class PermissionValidator(private val activity: Activity) {
     }
 
     fun requestPermissions() {
-        requestLocation()
+        requestLocationAndStorage()
         requestGps()
-        requestStorage()
     }
 
     private fun requestGps() {
         val locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Snackbar.make(activity.findViewById<View>(R.id.root), "Must have GPS enabled", Snackbar.LENGTH_LONG)
+            TripSnackbar(activity.findViewById<View>(R.id.root), R.string.permissions_gps, Snackbar.LENGTH_LONG)
                 .show()
 
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
@@ -51,23 +50,15 @@ class PermissionValidator(private val activity: Activity) {
         }
     }
 
-    private fun requestLocation() {
+    private fun requestLocationAndStorage() {
         if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                 activity,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                0
-            )
-        }
-    }
-
-    private fun requestStorage() {
-        if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                activity,
-                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                arrayOf(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ),
                 0
             )
         }

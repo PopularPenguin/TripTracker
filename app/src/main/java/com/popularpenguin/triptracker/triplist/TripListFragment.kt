@@ -153,15 +153,7 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     }
 
     override fun onClick(uid: Int) {
-        if (permissionValidator.checkStoragePermission()) {
-            ScreenNavigator(requireActivity().supportFragmentManager).loadSingleTrip(uid)
-        } else {
-            TripSnackbar(newTripFab, R.string.permissions_single_trip, Snackbar.LENGTH_LONG)
-                .setAction(R.string.snackbar_settings) {
-                    startActivity(permissionValidator.settingsIntent)
-                }
-                .show()
-        }
+        ScreenNavigator(requireActivity().supportFragmentManager).loadSingleTrip(uid)
     }
 
     override fun onLongClick(adapter: TripListAdapter, position: Int, trip: Trip) {

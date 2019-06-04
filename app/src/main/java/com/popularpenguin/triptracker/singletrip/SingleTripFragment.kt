@@ -17,6 +17,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
+import com.popularpenguin.triptracker.common.ImageLoader
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.map.UserLocation
 import com.popularpenguin.triptracker.room.AppDatabase
@@ -228,7 +229,8 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
     override fun onLongClick(adapter: PhotoAdapter, position: Int, trip: Trip) {
         PhotoDeleteDialog(requireContext()).apply {
             setOnDeleteListener { _, _ ->
-                val key = "${trip.uriList[position]}"
+                val photoUri = trip.uriList[position]
+                val key = photoUri.toString()
                 val marker = photoMarkerMap[key]
 
                 marker?.remove()

@@ -113,6 +113,13 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 return@setOnClickListener
             }
 
+            if (!isRunning) {
+                TripSnackbar(cameraView, R.string.snackbar_tracker_camera, Snackbar.LENGTH_LONG)
+                    .show()
+
+                return@setOnClickListener
+            }
+
             val filesDir = fragment.requireContext().filesDir
             val fileName = "${System.currentTimeMillis()}.jpg"
             photoFile = File(filesDir, fileName)

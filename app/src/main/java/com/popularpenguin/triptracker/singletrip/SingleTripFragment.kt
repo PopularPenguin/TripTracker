@@ -227,7 +227,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
 
     override fun onLongClick(adapter: PhotoAdapter, position: Int, trip: Trip) {
         PhotoDeleteDialog(requireContext()).apply {
-            setOnDismissListener {
+            setOnDeleteListener { _, _ ->
                 val key = "${trip.uriList[position]}"
                 val marker = photoMarkerMap[key]
 
@@ -235,7 +235,6 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 photoMarkerMap.remove(key)
 
                 GlobalScope.launch(Dispatchers.IO) {
-                    requireContext().contentResolver.delete(trip.uriList[position], null, null)
                     adapter.removeItem(position)
                     AppDatabase.get(requireContext())
                         .dao()

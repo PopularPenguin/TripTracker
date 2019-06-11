@@ -51,6 +51,7 @@
     <string name="snackbar_undo">Undo</string>
 
     <!-- Tracker -->
+    <string name="snackbar_no_camera">Your device doesn\'t have a camera.</string>
     <string name="snackbar_tracker_camera">Start the trip tracker before taking a photo.</string>
     <string name="text_distance">Distance:\u0020</string>
     <string name="text_distance_units">Miles</string>

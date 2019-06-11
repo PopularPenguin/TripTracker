@@ -39,12 +39,6 @@ class MapTrackerFragment: Fragment() {
         tripTracker.onResume()
     }
 
-    override fun onPause() {
-        tripTracker.onPause()
-
-        super.onPause()
-    }
-
     override fun onDestroy() {
         tripTracker.onDestroy()
 

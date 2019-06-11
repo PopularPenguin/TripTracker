@@ -2,7 +2,6 @@ package com.popularpenguin.triptracker.map
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.provider.MediaStore
@@ -10,7 +9,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -25,10 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
-import com.popularpenguin.triptracker.common.ImageLoader
-import com.popularpenguin.triptracker.common.PermissionValidator
-import com.popularpenguin.triptracker.common.ScreenNavigator
-import com.popularpenguin.triptracker.common.TripSnackbar
+import com.popularpenguin.triptracker.common.*
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +42,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     private val location = UserLocation(fragment.requireContext())
     private val locationList = mutableListOf<LatLng>()
     private val serviceConnection = TrackerNotification.getServiceConnection(fragment.requireContext())
-    private val photoList = mutableListOf<String>()
+    private val fileList = mutableListOf<String>()
     private val photoMarkerList = mutableListOf<LatLng>()
     private val uriList = mutableListOf<Uri>()
 
@@ -75,18 +70,9 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         }
     }
 
-    fun onPause() {
-        /*
-        if (!isRunning) return
-
-        location.apply {
-            removeListener(this@TripTracker)
-            stopLocationUpdates()
-        } */
-    }
-
     fun onDestroy() {
         Log.d("TripTracker", "onDestroy()")
+        Log.d("TripTracker", "isFinished = $isFinished, isRunning = $isRunning")
 
         if (!isFinished && isRunning) {
             location.apply {
@@ -102,53 +88,31 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
     fun addCameraListener(cameraView: View) {
         cameraView.setOnClickListener {
-            if (!PermissionValidator(fragment.requireActivity()).checkStoragePermission()) {
-                TripSnackbar(cameraView, R.string.permissions_storage, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.snackbar_settings) {
-                        val permissionValidator = PermissionValidator(fragment.requireActivity())
+            val context = fragment.requireContext()
+            val cameraLoader = CameraLoader(fragment.requireActivity(), it)
+            val capture = cameraLoader.captureIntent
 
-                        fragment.startActivity(permissionValidator.settingsIntent)
-                    }.show()
-
+            // No camera apps on phone
+            if (!cameraLoader.resolveActivity) {
+                it.isEnabled = false
+            }
+            // No camera on device or no permission
+            if (!cameraLoader.cameraReady) {
                 return@setOnClickListener
             }
 
+            // Tracker must be running in order to take and save photos
             if (!isRunning) {
-                TripSnackbar(cameraView, R.string.snackbar_tracker_camera, Snackbar.LENGTH_LONG)
+                TripSnackbar(cameraView, R.string.snackbar_tracker_camera, Snackbar.LENGTH_SHORT)
                     .show()
 
                 return@setOnClickListener
             }
 
-            val filesDir = fragment.requireContext().filesDir
-            val fileName = "${System.currentTimeMillis()}.jpg"
-            photoFile = File(filesDir, fileName)
-            val capture = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            val packageManager = fragment.requireActivity().packageManager
+            photoFile = FileUtils.getPhotoFile(context)
 
-            if (capture.resolveActivity(packageManager) == null) {
-                it.isEnabled = false
-            }
-
-            val uri = FileProvider.getUriForFile(
-                fragment.requireActivity(),
-                "com.popularpenguin.triptracker.fileprovider",
-                photoFile
-            )
-            capture.putExtra(MediaStore.EXTRA_OUTPUT, uri)
-
-            val cameraActivities = packageManager.queryIntentActivities(
-                capture,
-                PackageManager.MATCH_DEFAULT_ONLY
-            )
-
-            for (activity in cameraActivities) {
-                fragment.requireActivity().grantUriPermission(
-                    activity.activityInfo.packageName,
-                    uri,
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                )
-            }
+            val uri = FileUtils.getPhotoUri(context, photoFile)
+            cameraLoader.grantUriPermission(uri)
 
             fragment.startActivityForResult(capture, REQUEST_PHOTO)
         }
@@ -214,18 +178,15 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
     fun storePhoto() {
         val activity = fragment.requireActivity()
-        val uri = FileProvider.getUriForFile(
-            activity,
-            "com.popularpenguin.triptracker.fileprovider",
-            photoFile
-        )
+        val uri = FileUtils.getPhotoUri(activity, photoFile)
         uriList.add(uri)
 
         activity.revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 
         GlobalScope.launch(Dispatchers.IO) {
             ImageLoader.storePhoto(activity.contentResolver, uri, photoFile)
-            photoList.add("file://${photoFile.absolutePath}")
+            fileList.add("file://${photoFile.absolutePath}")
+
             if (locationList.isNotEmpty()) {
                 photoMarkerList.add(locationList.last())
             }
@@ -268,6 +229,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 photoMarkerList = this@TripTracker.photoMarkerList
                 points = locationList
                 totalDistance = this@TripTracker.distance
+                fileList = this@TripTracker.fileList
                 uriList = this@TripTracker.uriList
             }
 

@@ -84,14 +84,14 @@ object ImageLoader {
 
         try {
             outputStream = FileOutputStream(photoFile)
-
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            /*
             MediaStore.Images.Media.insertImage(
                 contentResolver,
                 bitmap,
                 photoFile.name,
                 photoFile.name
-            )
+            ) */
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {

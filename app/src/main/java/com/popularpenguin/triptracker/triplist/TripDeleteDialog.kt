@@ -1,17 +1,14 @@
 package com.popularpenguin.triptracker.triplist
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AlertDialog
 import com.popularpenguin.triptracker.R
+import com.popularpenguin.triptracker.common.FileUtils
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.io.File
-import java.net.URI
 
 class TripDeleteDialog(context: Context, adapter: TripListAdapter, position: Int, trip: Trip) {
     private val dialog = AlertDialog.Builder(context, R.style.DialogTheme)
@@ -20,18 +17,15 @@ class TripDeleteDialog(context: Context, adapter: TripListAdapter, position: Int
         .setPositiveButton(R.string.dialog_trip_delete_positive) { dialog, _ ->
             GlobalScope.launch(Dispatchers.IO) {
                 // delete all photo files associated with the trip
-                trip.fileList.forEach {
-                    val uri = URI(it)
-                    val photoFile = File(uri).apply {
-                        delete()
-                    }
-                    context.sendBroadcast(
-                        Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photoFile))
-                    )
+                trip.uriList.forEach {
+                    FileUtils.deletePhoto(context, it) // TODO: Do I really want to do this?
                 }
 
                 adapter.removeItem(position)
-                AppDatabase.get(context).dao().delete(trip)
+
+                AppDatabase.get(context)
+                    .dao()
+                    .delete(trip)
             }
 
             dialog.dismiss()

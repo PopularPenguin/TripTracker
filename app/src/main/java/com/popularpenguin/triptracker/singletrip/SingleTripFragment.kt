@@ -1,6 +1,5 @@
 package com.popularpenguin.triptracker.singletrip
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -18,7 +17,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
-import com.popularpenguin.triptracker.common.ImageLoader
+import com.popularpenguin.triptracker.common.FileUtils
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.map.UserLocation
 import com.popularpenguin.triptracker.room.AppDatabase
@@ -27,8 +26,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.net.URI
 
 class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick {
 
@@ -240,15 +237,11 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 photoMarkerMap.remove(key)
 
                 GlobalScope.launch(Dispatchers.IO) {
-                    val uri = URI(trip.fileList[position])
-                    val photoFile = File(uri).apply {
-                        delete()
-                    }
-                    context?.sendBroadcast(
-                        Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photoFile))
-                    )
+                    FileUtils.deletePhoto(requireContext(), photoUri)
+
                     trip.fileList.removeAt(position)
                     adapter.removeItem(position)
+
                     AppDatabase.get(requireContext())
                         .dao()
                         .update(trip)

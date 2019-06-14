@@ -4,12 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -36,7 +34,7 @@ import java.util.*
 class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLocation.UserLocationListener {
 
     companion object {
-        private const val REQUEST_PHOTO = 0
+        const val REQUEST_PHOTO = 0
     }
 
     private val location = UserLocation(fragment.requireContext())
@@ -47,7 +45,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     private val uriList = mutableListOf<Uri>()
 
     private lateinit var map: GoogleMap
-    private lateinit var photoFile: File
+    lateinit var photoFile: File
 
     private var distance = 0.0
     private var isMapReady = false
@@ -177,20 +175,24 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     }
 
     fun storePhoto() {
-        val activity = fragment.requireActivity()
-        val uri = FileUtils.getPhotoUri(activity, photoFile)
-        uriList.add(uri)
+        val context = fragment.requireContext()
+        val photoUri = FileUtils.getPhotoUri(context, photoFile)
+        uriList.add(photoUri)
 
-        activity.revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        context.revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 
         GlobalScope.launch(Dispatchers.IO) {
-            ImageLoader.storePhoto(activity.contentResolver, uri, photoFile)
+            ImageLoader.storePhoto(context.contentResolver, photoUri, photoFile)
             fileList.add("file://${photoFile.absolutePath}")
 
             if (locationList.isNotEmpty()) {
                 photoMarkerList.add(locationList.last())
             }
+
+            // TODO: Delete from default directory here
         }
+
+
     }
 
     private fun showSaveDialog() {

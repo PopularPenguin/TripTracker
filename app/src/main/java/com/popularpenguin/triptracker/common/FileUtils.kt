@@ -21,4 +21,9 @@ object FileUtils {
             photoFile
         )
     }
+
+    fun deletePhoto(context: Context, photoUri: Uri) {
+        context.contentResolver
+            .delete(photoUri, null, null) // TODO: Not deleting from gallery
+    }
 }

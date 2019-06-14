@@ -32,6 +32,7 @@ class MapTrackerFragment: Fragment() {
             addControlListener(trackerControlFab)
             addZoomListener(trackerZoomFab)
             addMapTypeListener(trackerMapTypeFab)
+            setInfoTextView(trackerDistanceTextView)
         }
     }
 

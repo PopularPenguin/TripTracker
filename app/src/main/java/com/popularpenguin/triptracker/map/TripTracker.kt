@@ -6,6 +6,7 @@ import android.content.res.ColorStateList
 import android.net.Uri
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -24,6 +25,7 @@ import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.*
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
+import kotlinx.android.synthetic.main.fragment_map_tracker.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -45,6 +47,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     private val uriList = mutableListOf<Uri>()
 
     private lateinit var map: GoogleMap
+    private lateinit var infoTextView: TextView
     lateinit var photoFile: File
 
     private var distance = 0.0
@@ -174,6 +177,10 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         }
     }
 
+    fun setInfoTextView(view: TextView) {
+        infoTextView = view
+    }
+
     fun storePhoto() {
         val context = fragment.requireContext()
         val photoUri = FileUtils.getPhotoUri(context, photoFile)
@@ -283,6 +290,10 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
         distance = computeTotalDistance()
 
+        val infoText = "${fragment.getString(R.string.text_distance)}: " +
+                "${distance.toString().take(6)} ${fragment.getString(R.string.text_distance_units)}"
+        infoTextView.text = infoText
+
         Log.d("TripTracker", "locationList.size = ${locationList.size}")
 
         isRefreshed = false
@@ -298,6 +309,13 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 uiSettings.isMapToolbarEnabled = false
             } catch (e: SecurityException) {
                 e.printStackTrace()
+            }
+
+            setOnCameraMoveStartedListener {
+                ViewAnimationUtils.hideInfoView(infoTextView)
+            }
+            setOnCameraIdleListener {
+                ViewAnimationUtils.showInfoView(infoTextView)
             }
         }
         isMapReady = true

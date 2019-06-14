@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.*
 import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.FileUtils
+import com.popularpenguin.triptracker.common.ViewAnimationUtils
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.map.UserLocation
 import com.popularpenguin.triptracker.room.AppDatabase
@@ -150,55 +151,13 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
 
                 // hide the distance view when the camera moves
                 setOnCameraMoveStartedListener {
-                    val hideAnimation = TranslateAnimation(
-                        0.0f,
-                        -singleTripDistanceTextView.width.toFloat(),
-                        singleTripDistanceTextView.height.toFloat(),
-                        -singleTripDistanceTextView.height.toFloat()
-                    ).apply {
-                        duration = 200
-                        fillAfter = true
-                    }
-
-                    singleTripDistanceTextView.startAnimation(hideAnimation)
-
-                    val hidePhotosAnimation = TranslateAnimation(
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        photoRecyclerView.height.toFloat()
-                    ).apply {
-                        duration = 200
-                        fillAfter = true
-                    }
-
-                    photoRecyclerView.startAnimation(hidePhotosAnimation)
+                    ViewAnimationUtils.hideInfoView(singleTripDistanceTextView)
+                    ViewAnimationUtils.hidePhotoView(photoRecyclerView)
                 }
                 // show the distance view when the camera isn't moving
                 setOnCameraIdleListener {
-                    val showAnimation = TranslateAnimation(
-                        -singleTripDistanceTextView.width.toFloat(),
-                        0.0f,
-                        0.0f,
-                        singleTripDistanceTextView.height.toFloat()
-                    ).apply {
-                        duration = 200
-                        fillAfter = true
-                    }
-
-                    singleTripDistanceTextView.startAnimation(showAnimation)
-
-                    val showPhotosAnimation = TranslateAnimation(
-                        0.0f,
-                        0.0f,
-                        photoRecyclerView.height.toFloat(),
-                        0.0f
-                    ).apply {
-                        duration = 200
-                        fillAfter = true
-                    }
-
-                    photoRecyclerView.startAnimation(showPhotosAnimation)
+                    ViewAnimationUtils.showInfoView(singleTripDistanceTextView)
+                    ViewAnimationUtils.showPhotoView(photoRecyclerView)
                 }
             }
 

@@ -13,6 +13,7 @@ import com.drew.imaging.ImageProcessingException
 import com.drew.metadata.Metadata
 import com.drew.metadata.MetadataException
 import com.drew.metadata.exif.ExifIFD0Directory
+import com.popularpenguin.triptracker.R
 import com.squareup.picasso.Picasso
 import java.io.BufferedInputStream
 import java.io.File
@@ -21,11 +22,14 @@ import java.io.IOException
 
 object ImageLoader {
 
-    fun load(photoUri: Uri, view: ImageView, fit: Boolean = false) {
+    fun load(photoUri: Uri, view: ImageView, center: Boolean = false, fit: Boolean = false) {
         val request = Picasso.get()
             .load(photoUri) // TODO: Add placeholder and error images
 
-        if (fit) {
+        if (center) {
+            request.resizeDimen(R.dimen.image_width, R.dimen.image_height)
+                .centerInside()
+        } else if (fit) {
             request.fit()
         }
 

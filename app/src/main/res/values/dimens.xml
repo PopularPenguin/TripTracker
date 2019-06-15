@@ -7,6 +7,10 @@
     <dimen name="dialog_about_width">300dp</dimen>
     <dimen name="dialog_about_height">120dp</dimen>
 
+    <!-- ImageView -->
+    <dimen name="image_width">120dp</dimen>
+    <dimen name="image_height">200dp</dimen>
+
     <!-- List -->
     <dimen name="card_corner_radius">6dp</dimen>
     <dimen name="card_elevation">2dp</dimen>

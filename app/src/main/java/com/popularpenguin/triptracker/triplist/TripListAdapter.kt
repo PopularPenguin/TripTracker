@@ -64,7 +64,7 @@ class TripListAdapter(private val tripList: MutableList<Trip>, private val handl
             }
 
             if (photoUri != null) {
-                ImageLoader.load(photoUri, itemView.listImageView, true)
+                ImageLoader.load(photoUri, itemView.listImageView, fit = true)
             } else {
                 itemView.listImageView.visibility = View.GONE
             }

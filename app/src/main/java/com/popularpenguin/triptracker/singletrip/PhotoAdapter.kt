@@ -49,7 +49,7 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
         }
 
         fun bind(photoUri: Uri) {
-            ImageLoader.load(photoUri, itemView.singleTripPhotoView, true)
+            ImageLoader.load(photoUri, itemView.singleTripPhotoView, center = true)
         }
 
         override fun onClick(view: View) {

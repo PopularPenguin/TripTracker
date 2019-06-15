@@ -196,7 +196,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 photoMarkerMap.remove(key)
 
                 GlobalScope.launch(Dispatchers.IO) {
-                    FileUtils.deletePhoto(requireContext(), photoUri)
+                    FileUtils.deletePhoto(requireActivity(), photoUri)
 
                     trip.fileList.removeAt(position)
                     adapter.removeItem(position)

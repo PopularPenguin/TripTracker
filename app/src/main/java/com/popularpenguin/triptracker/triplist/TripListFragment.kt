@@ -157,6 +157,6 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     }
 
     override fun onLongClick(adapter: TripListAdapter, position: Int, trip: Trip) {
-        TripDeleteDialog(requireContext(), adapter, position, trip).show()
+        TripDeleteDialog(requireActivity(), adapter, position, trip).show()
     }
 }

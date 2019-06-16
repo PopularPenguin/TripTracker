@@ -1,16 +1,19 @@
 package com.popularpenguin.triptracker.common
 
+import android.net.Uri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.map.MapTrackerFragment
 import com.popularpenguin.triptracker.singletrip.SingleTripFragment
+import com.popularpenguin.triptracker.singletrip.photoview.PhotoPagerFragment
 import com.popularpenguin.triptracker.triplist.TripListFragment
 
 class ScreenNavigator(private val fm: FragmentManager) {
 
     enum class Screen {
         MapTracker,
+        PhotoPager,
         SingleTrip,
         TripList
     }
@@ -30,6 +33,14 @@ class ScreenNavigator(private val fm: FragmentManager) {
         screen = Screen.MapTracker
         fm.beginTransaction()
             .add(R.id.fragment_container, MapTrackerFragment.newInstance() as Fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    fun loadPhotoPager(tripId: Int, photoPosition: Int) {
+        screen = Screen.PhotoPager
+        fm.beginTransaction()
+            .add(R.id.fragment_container, PhotoPagerFragment.newInstance(tripId, photoPosition))
             .addToBackStack(null)
             .commit()
     }

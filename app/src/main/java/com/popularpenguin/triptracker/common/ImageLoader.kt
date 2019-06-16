@@ -95,7 +95,7 @@ object ImageLoader {
                 bitmap,
                 photoFile.name,
                 photoFile.name
-            ) // TODO: Don't store in gallery? Or just delete from app's directory
+            )
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {

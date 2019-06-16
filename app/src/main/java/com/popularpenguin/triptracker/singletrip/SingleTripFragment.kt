@@ -1,12 +1,10 @@
 package com.popularpenguin.triptracker.singletrip
 
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.TranslateAnimation
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +16,7 @@ import com.google.android.gms.maps.model.*
 import com.google.maps.android.SphericalUtil
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.FileUtils
+import com.popularpenguin.triptracker.common.ScreenNavigator
 import com.popularpenguin.triptracker.common.ViewAnimationUtils
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.map.UserLocation
@@ -133,7 +132,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                             tag = trip.uriList[index]
                             setOnMarkerClickListener {
                                 if (it.tag != null) {
-                                    onClick(it.tag as Uri)
+                                    onClick(index)
                                 }
 
                                 false
@@ -181,8 +180,8 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
         }
     }
 
-    override fun onClick(photoUri: Uri) {
-        PhotoDialog(requireContext(), trip, photoUri).show()
+    override fun onClick(position: Int) {
+        ScreenNavigator(requireFragmentManager()).loadPhotoPager(trip.uid, position)
     }
 
     override fun onLongClick(adapter: PhotoAdapter, position: Int, trip: Trip) {

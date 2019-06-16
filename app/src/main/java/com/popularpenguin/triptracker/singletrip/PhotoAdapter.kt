@@ -14,7 +14,7 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
     RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
 
     interface OnClick {
-        fun onClick(photoUri: Uri)
+        fun onClick(position: Int)
         fun onLongClick(adapter: PhotoAdapter, position: Int, trip: Trip)
     }
 
@@ -53,7 +53,7 @@ class PhotoAdapter(private val trip: Trip, private val handler: OnClick) :
         }
 
         override fun onClick(view: View) {
-            handler.onClick(trip.uriList[adapterPosition])
+            handler.onClick(adapterPosition)
         }
 
         override fun onLongClick(view: View): Boolean {

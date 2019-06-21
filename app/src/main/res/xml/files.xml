@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <files-path name="trip_photos" path="."/>
+    <external-path name="trip_photos" path="Android/data/com.popularpenguin.triptracker/files/Pictures"/>
 </paths>

@@ -1,6 +1,8 @@
 package com.popularpenguin.triptracker.common
 
 import android.content.ContentResolver
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -36,13 +38,13 @@ object ImageLoader {
         request.into(view)
     }
 
-    fun storePhoto(contentResolver: ContentResolver, photoUri: Uri, photoFile: File) {
-        val rotation = getRotation(contentResolver, photoUri)
+    fun storePhoto(context: Context, photoUri: Uri, photoFile: File) {
+        val rotation = getRotation(context.contentResolver, photoUri)
         val matrix = Matrix().apply { postRotate(rotation) }
         val bitmap = BitmapFactory.decodeFile(photoFile.path)
         val finalBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
 
-        storeAsJpg(contentResolver, photoFile, finalBitmap)
+        storeAsJpg(context, photoFile, finalBitmap)
     }
 
     private fun getRotation(contentResolver: ContentResolver, photoUri: Uri): Float {
@@ -83,19 +85,18 @@ object ImageLoader {
         }
     }
 
-    private fun storeAsJpg(contentResolver: ContentResolver, photoFile: File, bitmap: Bitmap) {
+    private fun storeAsJpg(context: Context, photoFile: File, bitmap: Bitmap) {
         var outputStream: FileOutputStream? = null
 
         try {
             outputStream = FileOutputStream(photoFile)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
 
-            MediaStore.Images.Media.insertImage(
-                contentResolver,
-                bitmap,
-                photoFile.name,
-                photoFile.name
-            )
+            /*
+            Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).also {
+                it.data = Uri.fromFile(photoFile)
+                context.sendBroadcast(it)
+            } */
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {

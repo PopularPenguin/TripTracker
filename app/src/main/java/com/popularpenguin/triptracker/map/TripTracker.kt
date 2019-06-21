@@ -146,15 +146,17 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
             }
 
             if (isRunning) {
+                isRunning = false
+
                 location.apply {
                     removeListener(this@TripTracker)
                     stopLocationUpdates()
-
-                    showSaveDialog()
                 }
+
+                showSaveDialog()
             }
 
-            isRunning = !isRunning
+            isRunning = true
         }
     }
 
@@ -188,7 +190,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         context.revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 
         GlobalScope.launch(Dispatchers.IO) {
-            ImageLoader.storePhoto(context.contentResolver, photoUri, photoFile)
+            ImageLoader.storePhoto(context, photoUri, photoFile)
             fileList.add("file://${photoFile.absolutePath}")
 
             if (locationList.isNotEmpty()) {
@@ -202,12 +204,9 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     private fun showSaveDialog() {
         SaveDialog(fragment.requireContext()).apply {
             setCancelButtonOnClickListener {
-                location.apply {
-                    addListener(this@TripTracker)
-                    startLocationUpdates()
-                }
-
                 this.dismiss()
+
+                isRunning = true
             }
             setSaveButtonOnClickListener {
                 commitToDatabase(this.getDescription())

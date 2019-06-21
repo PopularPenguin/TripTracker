@@ -4,16 +4,16 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Environment
 import androidx.core.content.FileProvider
 import java.io.File
 
 object FileUtils {
 
     fun getPhotoFile(context: Context): File {
-        val filesDir = context.filesDir
-        val fileName = "${System.currentTimeMillis()}.jpg"
+        val filesDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
-        return File(filesDir, fileName)
+        return File.createTempFile(System.currentTimeMillis().toString(), ".jpg", filesDir)
     }
 
     fun getPhotoUri(context: Context, photoFile: File): Uri {

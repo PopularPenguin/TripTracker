@@ -26,7 +26,7 @@ object ImageLoader {
 
     fun load(photoUri: Uri, view: ImageView, center: Boolean = false, fit: Boolean = false) {
         val request = Picasso.get()
-            .load(photoUri) // TODO: Add placeholder and error images
+            .load(photoUri)
 
         if (center) {
             request.resizeDimen(R.dimen.image_width, R.dimen.image_height)

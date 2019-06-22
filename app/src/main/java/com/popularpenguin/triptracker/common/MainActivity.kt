@@ -7,6 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.popularpenguin.triptracker.R
 import kotlinx.android.synthetic.main.activity_main.*
 
+/**
+ *  Brian Niedzialkoski
+ *
+ *  App icons from https://www.iconfinder.com/iconsets/nature-37 @Raisul Hadi
+ *  PhotoView library https://github.com/chrisbanes/PhotoView @Chris Banes
+ *
+ */
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

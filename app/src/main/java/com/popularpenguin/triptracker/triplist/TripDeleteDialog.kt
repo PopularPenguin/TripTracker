@@ -33,7 +33,7 @@ class TripDeleteDialog(activity: Activity, adapter: TripListAdapter, position: I
         .setNegativeButton(R.string.dialog_trip_delete_negative) { dialog, _ ->
             dialog.dismiss()
         }
-        .setIcon(R.drawable.ic_launcher_foreground) // TODO: Change to app icon
+        .setIcon(R.drawable.ic_launcher_foreground)
 
     fun show() {
         dialog.show()

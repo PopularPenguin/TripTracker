@@ -188,6 +188,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
     fun setInfoTextView(view: TextView) {
         infoTextView = view
+        infoTextView.visibility = View.GONE // Initially, the view is hidden from the user until the map is ready
     }
 
     fun storePhoto() {
@@ -286,13 +287,15 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 }
             } else {
                 // this is the first location update, so zoom in on the user's location
-                animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
+                moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
                 // marker denoting the start of the trip
                 addMarker(MarkerOptions()
                     .position(latLng)
                     .title(fragment.getString(R.string.marker_start))
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                 )
+                // show the info text for the first time
+                infoTextView.visibility = View.VISIBLE
             }
         }
 

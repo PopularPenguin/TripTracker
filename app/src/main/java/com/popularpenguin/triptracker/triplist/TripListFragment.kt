@@ -17,10 +17,7 @@ import com.popularpenguin.triptracker.common.TripSnackbar
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.android.synthetic.main.fragment_trip_list.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.util.*
 
 class TripListFragment : Fragment(), TripListAdapter.OnClick {
@@ -30,6 +27,8 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
             return TripListFragment()
         }
     }
+
+    private val jobList = mutableListOf<Job>()
 
     private var startDate = 0L // Unix-time of earliest trip to load
     private var endDate = 0L // Unix-time of latest trip to load
@@ -108,7 +107,7 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     }
 
     private fun setRecyclerView(startDate: Long = 0L, endDate: Long = 0L, searchText: String = "") {
-        GlobalScope.launch(Dispatchers.Main) {
+        val displayTripsJob = GlobalScope.launch(Dispatchers.Main) {
             val tripList = withContext(Dispatchers.IO) {
                 val dao = AppDatabase.get(requireContext()).dao()
 
@@ -150,6 +149,8 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
                 })
             }
         }
+
+        jobList.add(displayTripsJob)
     }
 
     override fun onClick(uid: Int) {
@@ -158,5 +159,15 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
 
     override fun onLongClick(adapter: TripListAdapter, position: Int, trip: Trip) {
         TripDeleteDialog(requireActivity(), adapter, position, trip).show()
+    }
+
+    override fun onDestroy() {
+        for (job in jobList) {
+            if (job.isActive) {
+                job.cancel()
+            }
+        }
+
+        super.onDestroy()
     }
 }

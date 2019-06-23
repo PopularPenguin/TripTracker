@@ -22,10 +22,7 @@ import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.map.UserLocation
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.android.synthetic.main.fragment_single_trip_map.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick {
 
@@ -46,6 +43,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
     private lateinit var map: GoogleMap
     private lateinit var trip: Trip
 
+    private var jobList = mutableListOf<Job>()
     private var photoMarkerMap = mutableMapOf<String, Marker>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -80,7 +78,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
             uiSettings.isMapToolbarEnabled = false
         }
 
-        GlobalScope.launch(Dispatchers.Main) {
+        val loadTripJob = GlobalScope.launch(Dispatchers.Main) {
             val uid = arguments!!.getInt(ID_KEY)
             trip = withContext(Dispatchers.IO) {
                 AppDatabase.get(requireContext())
@@ -178,6 +176,8 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 "${trip.totalDistance.toString().take(6)} ${getString(R.string.text_distance_units)}"
             )
         }
+
+        jobList.add(loadTripJob)
     }
 
     override fun onClick(position: Int) {
@@ -194,7 +194,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 marker?.remove()
                 photoMarkerMap.remove(key)
 
-                GlobalScope.launch(Dispatchers.IO) {
+                val deleteJob = GlobalScope.launch(Dispatchers.IO) {
                     FileUtils.deletePhoto(requireActivity(), photoUri)
 
                     trip.fileList.removeAt(position)
@@ -204,9 +204,21 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                         .dao()
                         .update(trip)
                 }
+
+                jobList.add(deleteJob)
             }
 
             show()
         }
+    }
+
+    override fun onDestroy() {
+        for (job in jobList) {
+            if (job.isActive) {
+                job.cancel()
+            }
+        }
+
+        super.onDestroy()
     }
 }

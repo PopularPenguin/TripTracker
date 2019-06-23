@@ -27,6 +27,7 @@ import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
@@ -38,6 +39,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         const val REQUEST_PHOTO = 0
     }
 
+    private val jobList = mutableListOf<Job>()
     private val location = UserLocation(fragment.requireContext())
     private val locationList = mutableListOf<LatLng>()
     private val serviceConnection = TrackerNotification.getServiceConnection(fragment.requireContext())
@@ -82,6 +84,12 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
             fragment.requireActivity().apply {
                 unbindService(serviceConnection)
                 stopService(Intent(this, TrackerNotification::class.java))
+            }
+        }
+
+        for (job in jobList) {
+            if (job.isActive) {
+                job.cancel()
             }
         }
     }
@@ -189,7 +197,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
         context.revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 
-        GlobalScope.launch(Dispatchers.IO) {
+        val savePhotoJob = GlobalScope.launch(Dispatchers.IO) {
             ImageLoader.storePhoto(context, photoUri, photoFile)
             fileList.add("file://${photoFile.absolutePath}")
 
@@ -199,6 +207,8 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
             // TODO: Delete from default directory here
         }
+
+        jobList.add(savePhotoJob)
     }
 
     private fun showSaveDialog() {
@@ -227,7 +237,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     }
 
     private fun commitToDatabase(dialogDescription: String) {
-        GlobalScope.launch(Dispatchers.IO) {
+        val insertTripJob = GlobalScope.launch(Dispatchers.IO) {
             val trip = Trip().apply {
                 date = Date()
                 description = dialogDescription
@@ -242,6 +252,8 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 .dao()
                 .insert(trip)
         }
+
+        jobList.add(insertTripJob)
 
         Toast.makeText(
                 fragment.requireContext(),

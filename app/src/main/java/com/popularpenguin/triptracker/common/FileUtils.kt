@@ -27,7 +27,7 @@ object FileUtils {
     fun deletePhoto(activity: Activity, photoUri: Uri) {
         activity.grantUriPermission(activity.packageName, photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         activity.contentResolver
-            .delete(photoUri, null, null) // TODO: Not deleting from gallery
+            .delete(photoUri, null, null) // TODO: Not deleting from gallery, use File.delete?
         activity.revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
     }
 }

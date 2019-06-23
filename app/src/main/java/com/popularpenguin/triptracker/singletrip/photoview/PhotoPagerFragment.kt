@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.snackbar.Snackbar
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.TripSnackbar
@@ -13,10 +12,7 @@ import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.android.synthetic.main.fragment_photo_pager.*
 import kotlinx.android.synthetic.main.fragment_photo_pager.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class PhotoPagerFragment: Fragment() {
 
@@ -35,6 +31,8 @@ class PhotoPagerFragment: Fragment() {
             }
         }
     }
+
+    private val jobList = mutableListOf<Job>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_photo_pager, container, false)
@@ -64,10 +62,11 @@ class PhotoPagerFragment: Fragment() {
             .dao()
         val previousCaptionPhoto = trip.captionPhoto
 
-        GlobalScope.launch(Dispatchers.IO) {
+        val updateJob = GlobalScope.launch(Dispatchers.IO) {
             trip.captionPhoto = trip.uriList[position]
             dao.update(trip)
         }
+        jobList.add(updateJob)
 
         TripSnackbar(parentView, R.string.snackbar_photo_caption, Snackbar.LENGTH_LONG)
             .setAction(R.string.snackbar_undo) {
@@ -76,5 +75,15 @@ class PhotoPagerFragment: Fragment() {
                     dao.update(trip)
                 }
             }.show()
+    }
+
+    override fun onDestroy() {
+        for (job in jobList) {
+            if (job.isActive) {
+                job.cancel()
+            }
+        }
+
+        super.onDestroy()
     }
 }

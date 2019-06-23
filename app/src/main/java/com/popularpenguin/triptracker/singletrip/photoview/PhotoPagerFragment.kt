@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.snackbar.Snackbar
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.TripSnackbar

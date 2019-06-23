@@ -11,6 +11,8 @@ import kotlinx.android.synthetic.main.activity_main.*
  *  Brian Niedzialkoski
  *
  *  App icons from https://www.iconfinder.com/iconsets/nature-37 @Raisul Hadi
+ *  https://www.iconfinder.com/icons/2998131/camera_photo_photography_icon
+ *
  *  PhotoView library https://github.com/chrisbanes/PhotoView @Chris Banes
  *
  */

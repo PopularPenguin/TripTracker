@@ -14,6 +14,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.SphericalUtil
+import com.google.maps.android.ui.IconGenerator
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.FileUtils
 import com.popularpenguin.triptracker.common.ScreenNavigator
@@ -122,10 +123,14 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 // Add markers for the location of each photo taken
                 if (trip.uriList.isNotEmpty()) {
                     for ((index, latLng) in trip.photoMarkerList.withIndex()) {
+                        val iconBitmap = IconGenerator(requireContext()).apply {
+                            setBackground(resources.getDrawable(R.drawable.photo, null))
+                        }.makeIcon()
+
                         val marker = addMarker(
                             MarkerOptions()
                                 .position(latLng)
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                                .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
                         ).apply {
                             tag = trip.uriList[index]
                             setOnMarkerClickListener {

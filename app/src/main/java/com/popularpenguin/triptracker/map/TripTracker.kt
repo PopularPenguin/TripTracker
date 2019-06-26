@@ -170,7 +170,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
     fun addZoomListener(zoomView: View) {
         zoomView.setOnClickListener {
-            if (isRunning) {
+            if (isRunning && locationList.isNotEmpty()) {
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(locationList.last(), UserLocation.ZOOM))
             }
         }
@@ -200,13 +200,12 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
         val savePhotoJob = GlobalScope.launch(Dispatchers.IO) {
             ImageLoader.storePhoto(context, photoUri, photoFile)
-            fileList.add("file://${photoFile.absolutePath}")
+            fileList.add("file:/${photoFile.absolutePath}")
+            Log.d("TripTracker", "first = ${photoFile.absolutePath} second = ${fileList.last()}")
 
             if (locationList.isNotEmpty()) {
                 photoMarkerList.add(locationList.last())
             }
-
-            // TODO: Delete from default directory here
         }
 
         jobList.add(savePhotoJob)

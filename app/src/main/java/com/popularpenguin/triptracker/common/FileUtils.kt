@@ -1,10 +1,9 @@
 package com.popularpenguin.triptracker.common
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Environment
+import android.util.Log
 import androidx.core.content.FileProvider
 import java.io.File
 
@@ -12,8 +11,11 @@ object FileUtils {
 
     fun getPhotoFile(context: Context): File {
         val filesDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val tempFile = File.createTempFile(System.currentTimeMillis().toString(), ".jpg", filesDir)
 
-        return File.createTempFile(System.currentTimeMillis().toString(), ".jpg", filesDir)
+        tempFile.deleteOnExit()
+
+        return tempFile
     }
 
     fun getPhotoUri(context: Context, photoFile: File): Uri {
@@ -24,10 +26,11 @@ object FileUtils {
         )
     }
 
-    fun deletePhoto(activity: Activity, photoUri: Uri) {
-        activity.grantUriPermission(activity.packageName, photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-        activity.contentResolver
-            .delete(photoUri, null, null) // TODO: Not deleting from gallery, use File.delete?
-        activity.revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+    fun deletePhoto(context: Context, photoUri: Uri) {
+        Log.d("FileUtils", "Authority = ${photoUri.authority}, Path = ${photoUri.path}, $photoUri")
+
+        val isDeleted = context.contentResolver.delete(photoUri, null, null)
+
+        Log.d("FileUtils", "is deleted? $isDeleted")
     }
 }

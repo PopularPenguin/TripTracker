@@ -158,7 +158,10 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     }
 
     override fun onLongClick(adapter: TripListAdapter, position: Int, trip: Trip) {
-        TripDeleteDialog(requireActivity(), adapter, position, trip).show()
+        val deleteDialog = TripDeleteDialog(requireContext(), adapter, position, trip)
+
+        jobList.addAll(deleteDialog.jobList)
+        deleteDialog.show()
     }
 
     override fun onDestroy() {

@@ -1,6 +1,7 @@
 package com.popularpenguin.triptracker.common
 
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -8,8 +9,11 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
+import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.ImageView
+import androidx.core.content.FileProvider
 import com.drew.imaging.ImageMetadataReader
 import com.drew.imaging.ImageProcessingException
 import com.drew.metadata.Metadata
@@ -17,10 +21,7 @@ import com.drew.metadata.MetadataException
 import com.drew.metadata.exif.ExifIFD0Directory
 import com.popularpenguin.triptracker.R
 import com.squareup.picasso.Picasso
-import java.io.BufferedInputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 
 object ImageLoader {
 
@@ -48,16 +49,23 @@ object ImageLoader {
     }
 
     private fun getRotation(contentResolver: ContentResolver, photoUri: Uri): Float {
+        var inputStream: InputStream? = null
+        var bufferedInputStream: BufferedInputStream? = null
+
         var orientation = 0
+
         try {
-            val inputStream = contentResolver.openInputStream(photoUri)
+            inputStream = contentResolver.openInputStream(photoUri)
             var metadata: Metadata? = null
 
             if (inputStream != null) {
                 try {
-                    metadata = ImageMetadataReader.readMetadata(BufferedInputStream(inputStream))
+                    bufferedInputStream = BufferedInputStream(inputStream)
+                    metadata = ImageMetadataReader.readMetadata(bufferedInputStream)
                 } catch (e: ImageProcessingException) {
                     e.printStackTrace()
+                } finally {
+                    bufferedInputStream?.close()
                 }
 
                 if (metadata != null) {
@@ -75,6 +83,8 @@ object ImageLoader {
             }
         } catch (e: IOException) {
             e.printStackTrace()
+        } finally {
+            inputStream?.close()
         }
 
         return when (orientation) {
@@ -87,19 +97,27 @@ object ImageLoader {
 
     private fun storeAsJpg(context: Context, photoFile: File, bitmap: Bitmap) {
         var outputStream: FileOutputStream? = null
+        val photoUri = FileUtils.getPhotoUri(context, photoFile)
 
         try {
             outputStream = FileOutputStream(photoFile)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
 
-            /*
+            MediaStore.Images.Media.insertImage(
+                context.contentResolver,
+                bitmap,
+                photoFile.name,
+                photoFile.name
+            )
+
             Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).also {
-                it.data = Uri.fromFile(photoFile)
+                it.data = photoUri
                 context.sendBroadcast(it)
-            } */
+            }
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {
+            outputStream?.flush()
             outputStream?.close()
         }
     }

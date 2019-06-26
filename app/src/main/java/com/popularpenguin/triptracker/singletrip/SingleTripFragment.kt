@@ -200,7 +200,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 photoMarkerMap.remove(key)
 
                 val deleteJob = GlobalScope.launch(Dispatchers.IO) {
-                    FileUtils.deletePhoto(requireActivity(), photoUri)
+                    FileUtils.deletePhoto(requireContext(), photoUri)
 
                     trip.fileList.removeAt(position)
                     adapter.removeItem(position)
@@ -209,7 +209,6 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                         .dao()
                         .update(trip)
                 }
-
                 jobList.add(deleteJob)
             }
 

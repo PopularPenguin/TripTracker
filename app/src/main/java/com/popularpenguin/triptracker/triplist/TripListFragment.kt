@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.popularpenguin.triptracker.R
+import com.popularpenguin.triptracker.common.FileUtils
 import com.popularpenguin.triptracker.common.PermissionValidator
 import com.popularpenguin.triptracker.common.ScreenNavigator
 import com.popularpenguin.triptracker.common.TripSnackbar
@@ -158,10 +159,25 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     }
 
     override fun onLongClick(adapter: TripListAdapter, position: Int, trip: Trip) {
-        val deleteDialog = TripDeleteDialog(requireContext(), adapter, position, trip)
+        TripDeleteDialog(requireContext()).apply {
+            setOnDeleteListener { _, _ ->
+                val deleteTripJob = GlobalScope.launch(Dispatchers.IO) {
+                    // delete all photo files associated with the trip
+                    trip.uriList.forEach {
+                        FileUtils.deletePhoto(requireContext(), it)
+                    }
 
-        jobList.addAll(deleteDialog.jobList)
-        deleteDialog.show()
+                    adapter.removeItem(position)
+
+                    AppDatabase.get(requireContext())
+                        .dao()
+                        .delete(trip)
+                }
+                jobList.add(deleteTripJob)
+            }
+
+            show()
+        }
     }
 
     override fun onDestroy() {

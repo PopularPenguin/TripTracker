@@ -1,56 +1,35 @@
 package com.popularpenguin.triptracker.triplist
 
-import android.app.Activity
-import android.app.Dialog
 import android.content.Context
-import android.widget.Button
+import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import com.popularpenguin.triptracker.R
-import com.popularpenguin.triptracker.common.FileUtils
-import com.popularpenguin.triptracker.data.Trip
-import com.popularpenguin.triptracker.room.AppDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
-class TripDeleteDialog(context: Context, adapter: TripListAdapter, position: Int, trip: Trip) {
+class TripDeleteDialog(context: Context) {
 
-    val jobList = mutableListOf<Job>()
-
-    private val dialog = Dialog(context).apply {
-        setContentView(R.layout.dialog_trip_delete)
-
-        findViewById<Button>(R.id.dialogTripCancelButton).apply {
-            setOnClickListener {
-                cancel()
-            }
+    private val dialogBuilder = AlertDialog.Builder(context, R.style.DialogTheme)
+        .setTitle(R.string.dialog_trip_delete_title)
+        .setMessage(R.string.dialog_trip_delete_message)
+        .setIcon(R.drawable.ic_launcher_foreground)
+        .setNegativeButton(R.string.dialog_trip_delete_negative) { dialog, _ ->
+            dialog.cancel()
         }
-        findViewById<Button>(R.id.dialogTripDeleteButton).apply {
-            setOnClickListener {
-                delete(context, adapter, position, trip)
-                dismiss()
-            }
-        }
+
+    fun setOnDeleteListener(listener: ((DialogInterface, Int) -> Unit)) {
+        dialogBuilder.setPositiveButton(R.string.dialog_trip_delete_positive, listener)
     }
 
     fun show() {
-        dialog.show()
-    }
+        val dialog = dialogBuilder.create()
 
-    private fun delete(context: Context, adapter: TripListAdapter, position: Int, trip: Trip) {
-        val deleteTripJob = GlobalScope.launch(Dispatchers.IO) {
-            // delete all photo files associated with the trip
-            trip.uriList.forEach {
-                FileUtils.deletePhoto(context, it)
+        dialog.apply {
+            setOnShowListener {
+                (it as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
+                    .setTextColor(ContextCompat.getColor(context, R.color.red))
             }
 
-            adapter.removeItem(position)
-
-            AppDatabase.get(context)
-                .dao()
-                .delete(trip)
+            show()
         }
-        jobList.add(deleteTripJob)
     }
 }

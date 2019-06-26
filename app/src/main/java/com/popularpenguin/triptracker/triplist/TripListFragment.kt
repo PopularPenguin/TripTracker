@@ -149,6 +149,12 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
                     }
                 })
             }
+
+            newTripHintTextView.visibility = if (tripList.isEmpty()) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         }
 
         jobList.add(displayTripsJob)

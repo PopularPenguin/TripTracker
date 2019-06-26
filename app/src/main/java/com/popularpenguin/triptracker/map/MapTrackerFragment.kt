@@ -29,7 +29,7 @@ class MapTrackerFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         tripTracker = TripTracker(this).apply {
             addCameraListener(trackerCameraFab)
-            addControlListener(trackerControlFab)
+            addControlListener(trackerControlFab, trackerControlHintTextView)
             addZoomListener(trackerZoomFab)
             addMapTypeListener(trackerMapTypeFab)
             setInfoTextView(trackerDistanceTextView)

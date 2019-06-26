@@ -48,6 +48,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_media_play" />
 
+    <TextView
+            android:id="@+id/trackerControlHintTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@string/new_session_hint"
+            android:textColor="@color/black"
+            android:textStyle="bold|italic"
+            app:layout_constraintEnd_toStartOf="@id/trackerControlFab"
+            app:layout_constraintTop_toTopOf="@id/trackerControlFab"
+            app:layout_constraintBottom_toBottomOf="@id/trackerControlFab"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/trackerZoomFab"
         style="@style/SmallFabTheme"

@@ -51,6 +51,7 @@
     <string name="snackbar_undo">Undo</string>
 
     <!-- Tracker -->
+    <string name="new_session_hint">Start tracking your trip here -></string>
     <string name="snackbar_no_camera">Your device doesn\'t have a camera.</string>
     <string name="snackbar_tracker_camera">Start the trip tracker before taking a photo.</string>
     <string name="text_distance">Distance:\u0020</string>
@@ -59,4 +60,7 @@
     <string name="tracker_start">Start</string>
     <string name="tracker_stop">Stop</string>
     <string name="tracker_zoom">Zoom</string>
+
+    <!-- Trip List -->
+    <string name="new_trip_hint">Start a new trip here</string>
 </resources>

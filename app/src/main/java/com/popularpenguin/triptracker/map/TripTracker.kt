@@ -85,6 +85,12 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 unbindService(serviceConnection)
                 stopService(Intent(this, TrackerNotification::class.java))
             }
+
+            // delete all photos from internal storage since the trip has been canceled, there is now no way to access
+            // they will still remain in gallery
+            for (photoUri in uriList) {
+                FileUtils.deletePhoto(fragment.requireContext(), photoUri)
+            }
         }
 
         for (job in jobList) {

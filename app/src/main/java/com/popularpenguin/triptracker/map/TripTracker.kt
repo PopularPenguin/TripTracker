@@ -25,7 +25,6 @@ import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.*
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
-import kotlinx.android.synthetic.main.fragment_map_tracker.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job

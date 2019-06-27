@@ -1,6 +1,5 @@
 package com.popularpenguin.triptracker.common
 
-import android.net.Uri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.popularpenguin.triptracker.R

@@ -55,33 +55,6 @@ class Converters {
 
         @TypeConverter
         @JvmStatic
-        fun fromPhotoList(photoList: List<String>): String {
-            val sb = StringBuilder()
-
-            photoList.forEach { sb.append("$it;") }
-
-            return sb.toString()
-        }
-
-        @TypeConverter
-        @JvmStatic
-        fun toPhotoList(str: String): List<String> {
-            if (str.isEmpty()) {
-                return listOf()
-            }
-
-            val photoList = mutableListOf<String>()
-            val photoStrings = str.split(";")
-
-            photoStrings.forEach {
-                if (it.isNotEmpty()) photoList.add(it)
-            }
-
-            return photoList
-        }
-
-        @TypeConverter
-        @JvmStatic
         fun fromUri(uri: Uri?): String {
             return uri?.toString() ?: ""
         }

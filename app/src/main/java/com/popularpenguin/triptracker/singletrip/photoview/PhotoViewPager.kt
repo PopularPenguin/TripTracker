@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
 
+// Necessary class to fix index out of bounds crash when zooming photoView inside a ViewPager
 class PhotoViewPager(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs) {
 
     override fun onTouchEvent(ev: MotionEvent?): Boolean {

@@ -39,7 +39,6 @@ class UserLocation(context: Context) {
             val size = locationResult.locations.size
 
             // Check if the user moved at least 6 meters before sending the location result
-            // TODO: Test this
             if (size > 1) {
                 val previousLocation = locationResult.locations[size - 2]
                 val previousLatLng = LatLng(previousLocation.latitude, previousLocation.longitude)
@@ -62,8 +61,6 @@ class UserLocation(context: Context) {
             fusedLocationClient.lastLocation.addOnSuccessListener {
                 if (it != null) {
                     fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
-                } else {
-                    // TODO: Handle
                 }
             }
         } catch (e: SecurityException) {

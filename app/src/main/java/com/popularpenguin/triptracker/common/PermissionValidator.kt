@@ -42,7 +42,7 @@ class PermissionValidator(private val activity: Activity) {
         val locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            TripSnackbar(activity.findViewById<View>(R.id.root), R.string.permissions_gps, Snackbar.LENGTH_LONG)
+            TripSnackbar(activity.findViewById(R.id.root), R.string.permissions_gps, Snackbar.LENGTH_LONG)
                 .show()
 
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)

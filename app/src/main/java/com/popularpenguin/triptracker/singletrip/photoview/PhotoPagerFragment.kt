@@ -48,7 +48,7 @@ class PhotoPagerFragment: Fragment() {
                     .loadById(uid)
             }
 
-            photoViewPager.adapter = PhotoPagerAdapter(requireFragmentManager(), trip.uriList, position)
+            photoViewPager.adapter = PhotoPagerAdapter(requireFragmentManager(), trip.uriList)
             photoViewPager.currentItem = position
 
             view.setCaptionPhotoFab.setOnClickListener {

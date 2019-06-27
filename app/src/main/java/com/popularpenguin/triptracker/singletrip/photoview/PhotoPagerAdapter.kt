@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 
-class PhotoPagerAdapter(fm: FragmentManager, private val uris: List<Uri>, private val position: Int) :
+class PhotoPagerAdapter(fm: FragmentManager, private val uris: List<Uri>) :
     FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     private val fragmentList = mutableListOf<Fragment>()

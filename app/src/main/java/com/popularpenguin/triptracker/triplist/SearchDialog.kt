@@ -11,14 +11,15 @@ class SearchDialog(context: Context) {
 
     private val dialog = Dialog(context).apply {
         setContentView(R.layout.dialog_search)
+
+        findViewById<Button>(R.id.dialogSearchCancelButton).apply {
+            setOnClickListener {
+                dismiss()
+            }
+        }
     }
 
     private val descriptionEditText = dialog.findViewById<EditText>(R.id.dialogSearchEditText)
-    private val cancelButton = dialog.findViewById<Button>(R.id.dialogSearchCancelButton).apply {
-        setOnClickListener {
-            dialog.dismiss()
-        }
-    }
     private val searchButton = dialog.findViewById<Button>(R.id.dialogSearchButton)
 
     fun getSearchString(): String {

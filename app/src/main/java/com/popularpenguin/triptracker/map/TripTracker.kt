@@ -48,7 +48,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
     private lateinit var map: GoogleMap
     private lateinit var infoTextView: TextView
-    lateinit var photoFile: File
+    private lateinit var photoFile: File
 
     private var distance = 0.0
     private var isMapReady = false

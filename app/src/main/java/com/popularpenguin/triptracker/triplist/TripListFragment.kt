@@ -36,7 +36,6 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
 
     private lateinit var permissionValidator: PermissionValidator
 
-    // TODO: Refactor into a separate class?
     private val showDatePickerListener = View.OnClickListener {
         val dateSetListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
             when (it.id) {
@@ -52,7 +51,7 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
 
         DatePickerDialog(
                 requireContext(),
-                AlertDialog.THEME_DEVICE_DEFAULT_DARK, // TODO: Better custom theme?
+                AlertDialog.THEME_DEVICE_DEFAULT_DARK,
                 dateSetListener,
                 currentDate.year + 1900,
                 currentDate.month,

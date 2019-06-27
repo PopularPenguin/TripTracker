@@ -109,11 +109,6 @@ object ImageLoader {
                 photoFile.name,
                 photoFile.name
             )
-
-            Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).also {
-                it.data = photoUri
-                context.sendBroadcast(it)
-            }
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {

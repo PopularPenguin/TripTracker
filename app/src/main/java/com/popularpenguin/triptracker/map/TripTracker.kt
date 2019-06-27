@@ -44,7 +44,6 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     private val location = UserLocation(fragment.requireContext())
     private val locationList = mutableListOf<LatLng>()
     private val serviceConnection = TrackerNotification.getServiceConnection(fragment.requireContext())
-    private val fileList = mutableListOf<String>()
     private val photoMarkerList = mutableListOf<LatLng>()
     private val uriList = mutableListOf<Uri>()
 
@@ -119,9 +118,8 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
             }
 
             photoFile = FileUtils.getPhotoFile(context)
-
-            val uri = FileUtils.getPhotoUri(context, photoFile)
-            cameraLoader.grantUriPermission(uri)
+            val photoUri = FileUtils.getPhotoUri(context, photoFile)
+            cameraLoader.grantUriPermission(photoUri)
 
             fragment.startActivityForResult(capture, REQUEST_PHOTO)
         }
@@ -203,8 +201,6 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
         val savePhotoJob = GlobalScope.launch(Dispatchers.IO) {
             ImageLoader.storePhoto(context, photoUri, photoFile)
-            fileList.add("file:/${photoFile.absolutePath}")
-            Log.d("TripTracker", "first = ${photoFile.absolutePath} second = ${fileList.last()}")
 
             if (locationList.isNotEmpty()) {
                 photoMarkerList.add(locationList.last())
@@ -247,7 +243,6 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 photoMarkerList = this@TripTracker.photoMarkerList
                 points = locationList
                 totalDistance = this@TripTracker.distance
-                fileList = this@TripTracker.fileList
                 uriList = this@TripTracker.uriList
             }
 

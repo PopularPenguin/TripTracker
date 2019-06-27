@@ -17,8 +17,7 @@ class Trip() {
     var points = mutableListOf<LatLng>()
     var captionPhoto: Uri? = null // displayed in TripList, if empty, first photo from photoList is shown
     var photoMarkerList = mutableListOf<LatLng>() // list of photo location markers
-    @ColumnInfo(name = "total_distance") var totalDistance = 0.0
-    var fileList = mutableListOf<String>()
+    var totalDistance = 0.0
     var uriList = mutableListOf<Uri>()
 
     constructor(
@@ -29,7 +28,6 @@ class Trip() {
         captionPhoto: Uri?,
         photoMarkerList: MutableList<LatLng>,
         distance: Double,
-        fileList: MutableList<String>,
         uriList: MutableList<Uri>
     ): this() {
         uid = id
@@ -39,7 +37,6 @@ class Trip() {
         this.captionPhoto = captionPhoto
         this.photoMarkerList = photoMarkerList
         totalDistance = distance
-        this.fileList = fileList
         this.uriList = uriList
     }
 

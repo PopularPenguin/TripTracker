@@ -202,7 +202,6 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 val deleteJob = GlobalScope.launch(Dispatchers.IO) {
                     FileUtils.deletePhoto(requireContext(), photoUri)
 
-                    trip.fileList.removeAt(position)
                     adapter.removeItem(position)
 
                     AppDatabase.get(requireContext())

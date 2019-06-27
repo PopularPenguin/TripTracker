@@ -1,7 +1,6 @@
 package com.popularpenguin.triptracker.singletrip
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,9 +85,6 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                     .dao()
                     .loadById(uid)
             }
-
-            Log.d("SingleTripFragment", "MarkerList size = ${trip.photoMarkerList.size}")
-            Log.d("SingleTripFragment", "MarkerList[0] contents = ${trip.photoMarkerList[0]}")
 
             map.apply {
                 // Add the polylines for the entire trip

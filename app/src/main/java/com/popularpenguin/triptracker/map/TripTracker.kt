@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -72,9 +71,6 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     }
 
     fun onDestroy() {
-        Log.d("TripTracker", "onDestroy()")
-        Log.d("TripTracker", "isFinished = $isFinished, isRunning = $isRunning")
-
         if (!isFinished && isRunning) {
             location.apply {
                 removeListener(this@TripTracker)
@@ -306,8 +302,6 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         val infoText = "${fragment.getString(R.string.text_distance)}: " +
                 "${distance.toString().take(6)} ${fragment.getString(R.string.text_distance_units)}"
         infoTextView.text = infoText
-
-        Log.d("TripTracker", "locationList.size = ${locationList.size}")
 
         isRefreshed = false
     }

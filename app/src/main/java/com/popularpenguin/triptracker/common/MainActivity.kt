@@ -8,12 +8,25 @@ import com.popularpenguin.triptracker.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
- *  Brian Niedzialkoski
+ *  Trip and Photo Tracker by Brian Niedzialkoski
  *
  *  App icons from https://www.iconfinder.com/iconsets/nature-37 @Raisul Hadi
  *  https://www.iconfinder.com/icons/2998131/camera_photo_photography_icon
+ *  Creative Commons (Attribution 3.0 Unported)
  *
  *  PhotoView library https://github.com/chrisbanes/PhotoView @Chris Banes
+ *  Copyright 2018 Chris Banes
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
  */
 

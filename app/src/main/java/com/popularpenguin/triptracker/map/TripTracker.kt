@@ -129,6 +129,8 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     fun addControlListener(controlView: View, hintView: View? = null) {
         controlView.setOnClickListener {
             hintView?.visibility = View.GONE
+            // show the info text for the first time
+            infoTextView.visibility = View.VISIBLE
 
             if (!isRunning) {
                 location.apply {
@@ -292,14 +294,12 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                     .title(fragment.getString(R.string.marker_start))
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                 )
-                // show the info text for the first time
-                infoTextView.visibility = View.VISIBLE
             }
         }
 
         distance = computeTotalDistance()
 
-        val infoText = "${fragment.getString(R.string.text_distance)}: " +
+        val infoText = "${fragment.getString(R.string.text_distance)}" +
                 "${distance.toString().take(6)} ${fragment.getString(R.string.text_distance_units)}"
         infoTextView.text = infoText
 

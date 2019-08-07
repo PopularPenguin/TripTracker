@@ -19,6 +19,8 @@ import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.android.synthetic.main.fragment_trip_list.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import java.util.*
 
 class TripListFragment : Fragment(), TripListAdapter.OnClick {
@@ -107,8 +109,8 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     }
 
     private fun setRecyclerView(startDate: Long = 0L, endDate: Long = 0L, searchText: String = "") {
-        val displayTripsJob = GlobalScope.launch(Dispatchers.Main) {
-            val tripList = withContext(Dispatchers.IO) {
+        val displayTripsJob = CoroutineScope(Main).launch {
+            val tripList = withContext(IO) {
                 val dao = AppDatabase.get(requireContext()).dao()
 
                 if (startDate == 0L && endDate == 0L && searchText.isEmpty()) {
@@ -166,7 +168,7 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     override fun onLongClick(adapter: TripListAdapter, position: Int, trip: Trip) {
         TripDeleteDialog(requireContext()).apply {
             setOnDeleteListener { _, _ ->
-                val deleteTripJob = GlobalScope.launch(Dispatchers.IO) {
+                val deleteTripJob = CoroutineScope(IO).launch {
                     // delete all photo files associated with the trip
                     trip.uriList.forEach {
                         FileUtils.deletePhoto(requireContext(), it)

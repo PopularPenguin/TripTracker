@@ -24,10 +24,8 @@ import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.*
 import com.popularpenguin.triptracker.data.Trip
 import com.popularpenguin.triptracker.room.AppDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import java.io.File
 import java.util.*
 
@@ -202,7 +200,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
         context.revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 
-        val savePhotoJob = GlobalScope.launch(Dispatchers.IO) {
+        val savePhotoJob = CoroutineScope(IO).launch {
             ImageLoader.storePhoto(context, photoUri, photoFile)
 
             if (locationList.isNotEmpty()) {
@@ -239,7 +237,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     }
 
     private fun commitToDatabase(dialogDescription: String) {
-        val insertTripJob = GlobalScope.launch(Dispatchers.IO) {
+        val insertTripJob = CoroutineScope(IO).launch {
             val trip = Trip().apply {
                 date = Date()
                 description = dialogDescription

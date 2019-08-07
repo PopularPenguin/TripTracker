@@ -13,6 +13,8 @@ import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.android.synthetic.main.fragment_photo_pager.*
 import kotlinx.android.synthetic.main.fragment_photo_pager.view.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 
 class PhotoPagerFragment: Fragment() {
 
@@ -39,10 +41,10 @@ class PhotoPagerFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        GlobalScope.launch(Dispatchers.Main) {
+        CoroutineScope(Main).launch {
             val uid = arguments!!.getInt(ID_KEY)
             val position = arguments!!.getInt(PHOTO_URI_KEY)
-            val trip = withContext(Dispatchers.IO) {
+            val trip = withContext(IO) {
                 AppDatabase.get(requireContext())
                     .dao()
                     .loadById(uid)
@@ -62,7 +64,7 @@ class PhotoPagerFragment: Fragment() {
             .dao()
         val previousCaptionPhoto = trip.captionPhoto
 
-        val updateJob = GlobalScope.launch(Dispatchers.IO) {
+        val updateJob = CoroutineScope(IO).launch {
             trip.captionPhoto = trip.uriList[position]
             dao.update(trip)
         }

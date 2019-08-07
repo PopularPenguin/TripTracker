@@ -23,6 +23,8 @@ import com.popularpenguin.triptracker.map.UserLocation
 import com.popularpenguin.triptracker.room.AppDatabase
 import kotlinx.android.synthetic.main.fragment_single_trip_map.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 
 class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick {
 
@@ -78,9 +80,9 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
             uiSettings.isMapToolbarEnabled = false
         }
 
-        val loadTripJob = GlobalScope.launch(Dispatchers.Main) {
+        val loadTripJob = CoroutineScope(Main).launch {
             val uid = arguments!!.getInt(ID_KEY)
-            trip = withContext(Dispatchers.IO) {
+            trip = withContext(IO) {
                 AppDatabase.get(requireContext())
                     .dao()
                     .loadById(uid)
@@ -195,7 +197,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 marker?.remove()
                 photoMarkerMap.remove(key)
 
-                val deleteJob = GlobalScope.launch(Dispatchers.IO) {
+                val deleteJob = CoroutineScope(IO).launch {
                     FileUtils.deletePhoto(requireContext(), photoUri)
 
                     adapter.removeItem(position)

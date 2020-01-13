@@ -9,6 +9,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.input.getInputField
+import com.afollestad.materialdialogs.input.input
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -212,16 +215,19 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     }
 
     private fun showSaveDialog() {
-        SaveDialog(fragment.requireContext()).apply {
-            setCancelButtonOnClickListener {
-                this.dismiss()
-
+        MaterialDialog(fragment.requireContext()).show {
+            input(hintRes = R.string.dialog_save_hint)
+            negativeButton(R.string.dialog_save_cancel) {
                 isRunning = true
             }
-            setSaveButtonOnClickListener {
-                commitToDatabase(this.getDescription())
+            positiveButton(R.string.dialog_save_save) { dialog ->
+                val description = dialog.getInputField()
+                    .text
+                    .toString()
 
-                this.dismiss()
+                dialog.dismiss()
+
+                commitToDatabase(description)
 
                 // shut down the notification service before detaching the fragment
                 fragment.requireActivity().apply {
@@ -233,7 +239,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
                 ScreenNavigator(fragment.requireActivity().supportFragmentManager).loadTripList()
             }
-        }.show()
+        }
     }
 
     private fun commitToDatabase(dialogDescription: String) {

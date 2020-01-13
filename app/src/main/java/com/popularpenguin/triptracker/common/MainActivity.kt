@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.afollestad.materialdialogs.MaterialDialog
 import com.popularpenguin.triptracker.R
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -57,7 +58,10 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_about -> {
-                AboutDialog(this).show()
+                MaterialDialog(this).show {
+                    message(R.string.dialog_about_text)
+                    positiveButton(R.string.dialog_about_ok)
+                }
 
                 true
             }

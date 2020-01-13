@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.input.getInputField
+import com.afollestad.materialdialogs.input.input
 import com.google.android.material.snackbar.Snackbar
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.FileUtils
@@ -52,12 +55,12 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
         val currentDate = Date()
 
         DatePickerDialog(
-                requireContext(),
-                AlertDialog.THEME_DEVICE_DEFAULT_DARK,
-                dateSetListener,
-                currentDate.year + 1900,
-                currentDate.month,
-                currentDate.day
+            requireContext(),
+            AlertDialog.THEME_DEVICE_DEFAULT_DARK,
+            dateSetListener,
+            currentDate.year + 1900,
+            currentDate.month,
+            currentDate.day
         ).apply {
             when (it.id) {
                 R.id.startDateFab -> setTitle(R.string.date_picker_title_start)
@@ -69,7 +72,11 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
         }.show()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_trip_list, container, false)
     }
 
@@ -83,13 +90,19 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
         }
 
         searchDescriptionFab.setOnClickListener {
-            SearchDialog(requireContext()).apply {
-                setSearchButtonOnClickListener {
-                    setRecyclerView(searchText = getSearchString())
+            MaterialDialog(requireContext()).show {
+                input(hintRes = R.string.dialog_search_hint, allowEmpty = true)
+                message(R.string.dialog_search_message)
+                negativeButton(R.string.dialog_search_cancel)
+                positiveButton(R.string.dialog_search_search) { dialog ->
+                    val searchText = dialog.getInputField()
+                        .text
+                        .toString()
+                        .trim()
 
-                    dismiss()
+                    setRecyclerView(searchText = searchText)
                 }
-            }.show()
+            }
         }
 
         startDateFab.setOnClickListener(showDatePickerListener)
@@ -132,11 +145,11 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
 
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     val fabList = listOf(
-                            showAllFab,
-                            searchDescriptionFab,
-                            startDateFab,
-                            endDateFab,
-                            newTripFab
+                        showAllFab,
+                        searchDescriptionFab,
+                        startDateFab,
+                        endDateFab,
+                        newTripFab
                     )
 
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -166,8 +179,11 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     }
 
     override fun onLongClick(adapter: TripListAdapter, position: Int, trip: Trip) {
-        TripDeleteDialog(requireContext()).apply {
-            setOnDeleteListener { _, _ ->
+        MaterialDialog(requireContext()).show {
+            title(res = R.string.dialog_trip_delete_title)
+            message(R.string.dialog_trip_delete_message)
+            icon(R.drawable.ic_launcher_foreground)
+            positiveButton(R.string.dialog_trip_delete_positive) {
                 val deleteTripJob = CoroutineScope(IO).launch {
                     // delete all photo files associated with the trip
                     trip.uriList.forEach {
@@ -182,8 +198,7 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
                 }
                 jobList.add(deleteTripJob)
             }
-
-            show()
+            negativeButton(R.string.dialog_trip_delete_negative)
         }
     }
 

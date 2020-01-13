@@ -29,11 +29,14 @@
     <!-- Dialog Save -->
     <string name="text_hint_save">Trip Description:</string>
     <string name="dialog_save_cancel">Cancel</string>
+    <string name="dialog_save_hint">Add a description of your trip</string>
     <string name="dialog_save_save">Save Trip</string>
 
     <!-- Dialog Search -->
     <string name="text_hint_search">Search trip descriptions:</string>
+    <string name="dialog_search_message">Search trips, leave blank to list all trips.</string>
     <string name="dialog_search_cancel">Cancel</string>
+    <string name="dialog_search_hint">Search trip titles</string>
     <string name="dialog_search_search">Search</string>
 
     <!-- Map -->

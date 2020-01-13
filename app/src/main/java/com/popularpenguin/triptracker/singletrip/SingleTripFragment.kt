@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -188,8 +189,11 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
     }
 
     override fun onLongClick(adapter: PhotoAdapter, position: Int, trip: Trip) {
-        PhotoDeleteDialog(requireContext()).apply {
-            setOnDeleteListener { _, _ ->
+        MaterialDialog(requireContext()).show {
+            title(R.string.dialog_photo_delete_title)
+            message(R.string.dialog_photo_delete_message)
+            negativeButton(R.string.dialog_photo_delete_negative)
+            positiveButton(R.string.dialog_photo_delete_positive) {
                 val photoUri = trip.uriList[position]
                 val key = photoUri.toString()
                 val marker = photoMarkerMap[key]
@@ -208,8 +212,6 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 }
                 jobList.add(deleteJob)
             }
-
-            show()
         }
     }
 

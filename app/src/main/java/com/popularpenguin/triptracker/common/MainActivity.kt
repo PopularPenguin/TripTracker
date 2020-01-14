@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.popularpenguin.triptracker.R
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -59,6 +60,8 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_about -> {
                 MaterialDialog(this).show {
+                    lifecycleOwner(this@MainActivity)
+
                     message(R.string.dialog_about_text)
                     cornerRadius(10f)
                     positiveButton(R.string.dialog_about_ok)

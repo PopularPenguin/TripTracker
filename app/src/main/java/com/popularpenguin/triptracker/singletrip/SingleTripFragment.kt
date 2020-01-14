@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -190,6 +191,8 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
 
     override fun onLongClick(adapter: PhotoAdapter, position: Int, trip: Trip) {
         MaterialDialog(requireContext()).show {
+            lifecycleOwner(this@SingleTripFragment)
+
             title(R.string.dialog_photo_delete_title)
             message(R.string.dialog_photo_delete_message)
             cornerRadius(10f)

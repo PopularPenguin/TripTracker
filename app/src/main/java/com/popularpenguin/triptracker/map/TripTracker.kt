@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
+import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -216,6 +217,8 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
     private fun showSaveDialog() {
         MaterialDialog(fragment.requireContext()).show {
+            lifecycleOwner(fragment)
+
             input(hintRes = R.string.dialog_save_hint)
             cornerRadius(10f)
             negativeButton(R.string.dialog_save_cancel) {

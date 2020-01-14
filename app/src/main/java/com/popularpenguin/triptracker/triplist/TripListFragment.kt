@@ -14,6 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.datetime.datePicker
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
+import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.google.android.material.snackbar.Snackbar
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.FileUtils
@@ -46,6 +47,8 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
     // TODO: Improve looks of dialog, add max available date
     private val showDatePickerListener = View.OnClickListener { view ->
         MaterialDialog(requireContext()).show {
+            lifecycleOwner(this@TripListFragment)
+
             when (view.id) {
                 R.id.startDateFab -> title(R.string.date_picker_title_start)
                 R.id.endDateFab -> title(R.string.date_picker_title_end)

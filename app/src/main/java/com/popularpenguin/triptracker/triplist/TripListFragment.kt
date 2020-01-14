@@ -3,6 +3,7 @@ package com.popularpenguin.triptracker.triplist
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.datetime.datePicker
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
 import com.google.android.material.snackbar.Snackbar
@@ -41,35 +43,27 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
 
     private lateinit var permissionValidator: PermissionValidator
 
-    private val showDatePickerListener = View.OnClickListener {
-        val dateSetListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
-            when (it.id) {
-                R.id.startDateFab -> startDate = GregorianCalendar(year, month, day).timeInMillis
-                R.id.endDateFab -> endDate = GregorianCalendar(year, month, day + 1).timeInMillis
+    // TODO: Improve looks of dialog, add max available date
+    private val showDatePickerListener = View.OnClickListener { view ->
+        MaterialDialog(requireContext()).show {
+            when (view.id) {
+                R.id.startDateFab -> title(R.string.date_picker_title_start)
+                R.id.endDateFab -> title(R.string.date_picker_title_end)
             }
 
-            if (startDate <= endDate) {
-                setRecyclerView(startDate, endDate)
+            cornerRadius(10f)
+
+            datePicker { dialog, date ->
+                when (view.id) {
+                    R.id.startDateFab -> startDate = date.timeInMillis
+                    R.id.endDateFab -> endDate = date.timeInMillis + 86_400_000L // add one day
+                }
+
+                if (startDate <= endDate) {
+                    setRecyclerView(startDate, endDate)
+                }
             }
         }
-        val currentDate = Date()
-
-        DatePickerDialog(
-            requireContext(),
-            AlertDialog.THEME_DEVICE_DEFAULT_DARK,
-            dateSetListener,
-            currentDate.year + 1900,
-            currentDate.month,
-            currentDate.day
-        ).apply {
-            when (it.id) {
-                R.id.startDateFab -> setTitle(R.string.date_picker_title_start)
-                R.id.endDateFab -> setTitle(R.string.date_picker_title_end)
-            }
-            datePicker.minDate = GregorianCalendar(2019, 0, 1).timeInMillis
-            datePicker.maxDate = System.currentTimeMillis()
-            updateDate(datePicker.year, datePicker.month, datePicker.dayOfMonth)
-        }.show()
     }
 
     override fun onCreateView(
@@ -93,6 +87,7 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
             MaterialDialog(requireContext()).show {
                 input(hintRes = R.string.dialog_search_hint, allowEmpty = true)
                 message(R.string.dialog_search_message)
+                cornerRadius(10f)
                 negativeButton(R.string.dialog_search_cancel)
                 positiveButton(R.string.dialog_search_search) { dialog ->
                     val searchText = dialog.getInputField()
@@ -183,6 +178,7 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
             title(res = R.string.dialog_trip_delete_title)
             message(R.string.dialog_trip_delete_message)
             icon(R.drawable.ic_launcher_foreground)
+            cornerRadius(10f)
             positiveButton(R.string.dialog_trip_delete_positive) {
                 val deleteTripJob = CoroutineScope(IO).launch {
                     // delete all photo files associated with the trip

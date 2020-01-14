@@ -192,6 +192,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
         MaterialDialog(requireContext()).show {
             title(R.string.dialog_photo_delete_title)
             message(R.string.dialog_photo_delete_message)
+            cornerRadius(10f)
             negativeButton(R.string.dialog_photo_delete_negative)
             positiveButton(R.string.dialog_photo_delete_positive) {
                 val photoUri = trip.uriList[position]

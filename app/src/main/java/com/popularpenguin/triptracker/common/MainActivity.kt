@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_about -> {
                 MaterialDialog(this).show {
                     message(R.string.dialog_about_text)
+                    cornerRadius(10f)
                     positiveButton(R.string.dialog_about_ok)
                 }
 

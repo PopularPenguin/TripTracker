@@ -217,6 +217,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     private fun showSaveDialog() {
         MaterialDialog(fragment.requireContext()).show {
             input(hintRes = R.string.dialog_save_hint)
+            cornerRadius(10f)
             negativeButton(R.string.dialog_save_cancel) {
                 isRunning = true
             }

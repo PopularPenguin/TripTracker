@@ -325,13 +325,6 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
             } catch (e: SecurityException) {
                 e.printStackTrace()
             }
-
-            setOnCameraMoveStartedListener {
-                ViewAnimationUtils.hideInfoView(infoTextView)
-            }
-            setOnCameraIdleListener {
-                ViewAnimationUtils.showInfoView(infoTextView)
-            }
         }
         isMapReady = true
     }

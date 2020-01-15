@@ -20,11 +20,11 @@
             android:gravity="center"
             android:background="@drawable/text_view_oval"
             android:text="@string/text_distance"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold|italic"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/trackerCameraFab"

@@ -153,12 +153,10 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
 
                 // hide the distance view when the camera moves
                 setOnCameraMoveStartedListener {
-                    ViewAnimationUtils.hideInfoView(singleTripDistanceTextView)
                     ViewAnimationUtils.hidePhotoView(photoRecyclerView)
                 }
                 // show the distance view when the camera isn't moving
                 setOnCameraIdleListener {
-                    ViewAnimationUtils.showInfoView(singleTripDistanceTextView)
                     ViewAnimationUtils.showPhotoView(photoRecyclerView)
                 }
             }

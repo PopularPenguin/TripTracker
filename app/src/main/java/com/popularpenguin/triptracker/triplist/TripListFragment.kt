@@ -44,7 +44,6 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
 
     private lateinit var permissionValidator: PermissionValidator
 
-    // TODO: Improve looks of dialog, add max available date
     private val showDatePickerListener = View.OnClickListener { view ->
         MaterialDialog(requireContext()).show {
             lifecycleOwner(this@TripListFragment)

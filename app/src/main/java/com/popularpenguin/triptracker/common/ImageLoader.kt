@@ -2,6 +2,7 @@ package com.popularpenguin.triptracker.common
 
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -93,6 +94,7 @@ object ImageLoader {
     private fun storeAsJpg(context: Context, photoFile: File, bitmap: Bitmap) {
         var outputStream: FileOutputStream? = null
         val photoUri = FileUtils.getPhotoUri(context, photoFile)
+        val refreshIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, photoUri)
 
         try {
             outputStream = FileOutputStream(photoFile)
@@ -104,6 +106,8 @@ object ImageLoader {
                 photoFile.name,
                 photoFile.name
             )
+
+            context.sendBroadcast(refreshIntent)
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {

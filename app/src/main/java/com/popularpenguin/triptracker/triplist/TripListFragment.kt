@@ -56,7 +56,7 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
 
             cornerRadius(10f)
 
-            datePicker { dialog, date ->
+            datePicker(maxDate = Calendar.getInstance()) { dialog, date ->
                 when (view.id) {
                     R.id.startDateFab -> startDate = date.timeInMillis
                     R.id.endDateFab -> endDate = date.timeInMillis + 86_400_000L // add one day

@@ -1,53 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="300dp"
-    android:layout_margin="@dimen/card_margin"
-    app:cardCornerRadius="@dimen/card_corner_radius"
-    app:cardElevation="@dimen/card_elevation">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/gradient_list_view">
+        android:layout_height="300dp"
+        android:layout_margin="@dimen/card_margin"
+        app:cardCornerRadius="@dimen/card_corner_radius"
+        app:cardElevation="@dimen/card_elevation">
 
-        <TextView
-            android:id="@+id/listDescriptionView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:textColor="@color/white"
-            android:gravity="center"
-            app:layout_constraintBottom_toTopOf="@+id/listDateView"
-            app:layout_constraintEnd_toEndOf="@+id/listImageView"
-            app:layout_constraintStart_toStartOf="@+id/listImageView"
-            app:layout_constraintTop_toBottomOf="@+id/listImageView"
-            tools:text="Description" />
-
-        <TextView
-            android:id="@+id/listDateView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/listDescriptionView"
-            app:layout_constraintStart_toStartOf="@+id/listDescriptionView"
-            tools:text="Date" />
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_list_view">
 
         <ImageView
-            android:id="@+id/listImageView"
-            android:contentDescription="@string/photo_content_description"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/image_height"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                android:id="@+id/listImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/photo_content_description" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/transparentDarkGray"
+                android:elevation="2dp"
+                android:orientation="vertical">
 
+            <TextView
+                    android:id="@+id/listDescriptionView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@color/transparent"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:textColor="@color/white"
+                    tools:text="Description" />
+
+            <TextView
+                    android:id="@+id/listDateView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/transparent"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_horizontal|bottom"
+                    tools:text="Date" />
+
+        </LinearLayout>
+    </FrameLayout>
 </androidx.cardview.widget.CardView>
 

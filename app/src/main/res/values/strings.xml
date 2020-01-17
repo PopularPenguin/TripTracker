@@ -28,8 +28,9 @@
 
     <!-- Dialog Save -->
     <string name="text_hint_save">Trip Description:</string>
+    <string name="dialog_save_title">Tracker stopped</string>
     <string name="dialog_save_cancel">Cancel</string>
-    <string name="dialog_save_hint">Add a description of your trip</string>
+    <string name="dialog_save_hint">Add a trip description.</string>
     <string name="dialog_save_save">Save Trip</string>
 
     <!-- Dialog Search -->

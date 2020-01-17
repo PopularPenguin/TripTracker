@@ -31,7 +31,14 @@ class MapTrackerFragment: Fragment() {
             addZoomListener(trackerZoomFab)
             addMapTypeListener(trackerMapTypeFab)
             setInfoTextView(trackerDistanceTextView)
+            readBundle(savedInstanceState)
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        tripTracker.setBundle(outState)
     }
 
     override fun onResume() {

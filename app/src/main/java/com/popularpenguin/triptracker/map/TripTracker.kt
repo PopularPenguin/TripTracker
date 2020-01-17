@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
+import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -56,11 +57,26 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
     private var isRefreshed = true
     private var isRunning = false
     private var isFinished = false
+    private var isSaveDialogShown = false
 
     init {
         val mapFragment = fragment.childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
 
         mapFragment.getMapAsync(this)
+    }
+
+    fun readBundle(bundle: Bundle?) {
+        bundle?.let {
+            isSaveDialogShown = it.getBoolean("isSaveDialogShown")
+        }
+
+        if (isSaveDialogShown) {
+            showSaveDialog()
+        }
+    }
+
+    fun setBundle(bundle: Bundle) {
+        bundle.putBoolean("isSaveDialogShown", isSaveDialogShown)
     }
 
     fun onResume() {
@@ -69,6 +85,10 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
         location.apply {
             addListener(this@TripTracker)
             startLocationUpdates()
+        }
+
+        if (isSaveDialogShown) {
+            showSaveDialog()
         }
     }
 
@@ -217,12 +237,15 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
     private fun showSaveDialog() {
         MaterialDialog(fragment.requireContext()).show {
+            isSaveDialogShown = true
             lifecycleOwner(fragment)
 
             input(hintRes = R.string.dialog_save_hint)
+            title(R.string.dialog_save_title)
             cornerRadius(10f)
             negativeButton(R.string.dialog_save_cancel) {
                 isRunning = true
+                isSaveDialogShown = false
             }
             positiveButton(R.string.dialog_save_save) { dialog ->
                 val description = dialog.getInputField()
@@ -240,6 +263,7 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
                 }
 
                 isFinished = true
+                isSaveDialogShown = false
 
                 ScreenNavigator(fragment.requireActivity().supportFragmentManager).loadTripList()
             }
@@ -307,9 +331,11 @@ class TripTracker(private val fragment: Fragment) : OnMapReadyCallback, UserLoca
 
         distance = computeTotalDistance()
 
-        val infoText = "${fragment.getString(R.string.text_distance)}" +
-                "${distance.toString().take(6)} ${fragment.getString(R.string.text_distance_units)}"
-        infoTextView.text = infoText
+        if (fragment.context != null) {
+            val infoText = "${fragment.getString(R.string.text_distance)}" +
+                    "${distance.toString().take(6)} ${fragment.getString(R.string.text_distance_units)}"
+            infoTextView.text = infoText
+        }
 
         isRefreshed = false
     }

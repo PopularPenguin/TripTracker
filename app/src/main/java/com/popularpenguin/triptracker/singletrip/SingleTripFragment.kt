@@ -61,6 +61,14 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
     }
 
     private fun setRecyclerView(trip: Trip) {
+        val photoRecyclerView = requireActivity().findViewById<RecyclerView>(R.id.photoRecyclerView)
+
+        if (trip.uriList.isEmpty()) {
+            photoRecyclerView.visibility = View.GONE // no photos to display, so we don't need a recycler view for them
+
+            return
+        }
+
         val viewManager = LinearLayoutManager(
             requireContext(),
             LinearLayoutManager.HORIZONTAL,
@@ -68,7 +76,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
         )
         val viewAdapter = PhotoAdapter(trip, this)
 
-        requireActivity().findViewById<RecyclerView>(R.id.photoRecyclerView).apply {
+        photoRecyclerView.apply {
             setHasFixedSize(true)
 
             layoutManager = viewManager
@@ -151,13 +159,15 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 trip.points.forEach { latLngBuilder.include(it) }
                 moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 300 /* padding */))
 
-                // hide the distance view when the camera moves
-                setOnCameraMoveStartedListener {
-                    ViewAnimationUtils.hidePhotoView(photoRecyclerView)
-                }
-                // show the distance view when the camera isn't moving
-                setOnCameraIdleListener {
-                    ViewAnimationUtils.showPhotoView(photoRecyclerView)
+                if (trip.uriList.isNotEmpty()) {
+                    // hide the view when the camera moves
+                    setOnCameraMoveStartedListener {
+                        ViewAnimationUtils.hidePhotoView(photoRecyclerView)
+                    }
+                    // show the view when the camera isn't moving
+                    setOnCameraIdleListener {
+                        ViewAnimationUtils.showPhotoView(photoRecyclerView)
+                    }
                 }
             }
 

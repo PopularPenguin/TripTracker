@@ -1,6 +1,7 @@
 package com.popularpenguin.triptracker.singletrip
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -129,6 +130,7 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 }
 
                 // Add markers for the location of each photo taken
+                // TODO: Fix bug here; clicking photo marker returns last index for all markers
                 if (trip.uriList.isNotEmpty()) {
                     for ((index, latLng) in trip.photoMarkerList.withIndex()) {
                         val iconBitmap = IconGenerator(requireContext()).apply {
@@ -194,6 +196,8 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
     }
 
     override fun onClick(position: Int) {
+        // TODO: Test index
+        Log.d(javaClass.simpleName, "Position is currently $position")
         ScreenNavigator(requireFragmentManager()).loadPhotoPager(trip.uid, position)
     }
 

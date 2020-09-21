@@ -153,8 +153,15 @@ class TripListFragment : Fragment(), TripListAdapter.OnClick {
                         fabList.forEach {
                             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                                 it.show()
+                                newTripHintTextView.visibility = if (tripList.isEmpty()) {
+                                    View.VISIBLE
+                                } else {
+                                    View.GONE
+                                }
+
                             } else {
                                 it.hide()
+                                newTripHintTextView.visibility = View.GONE
                             }
                         }
                     }

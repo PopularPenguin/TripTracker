@@ -54,7 +54,7 @@ dependencies {
     implementation "com.github.chrisbanes:PhotoView:2.3.0"
 
     // Material Dialogs
-    def dialog_version = "3.1.1"
+    def dialog_version = "3.3.0"
     implementation "com.afollestad.material-dialogs:core:$dialog_version"
     implementation "com.afollestad.material-dialogs:datetime:$dialog_version"
     implementation "com.afollestad.material-dialogs:input:$dialog_version"

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Trip and Photo Tracker</string>
     <string name="action_about">About</string>
+    <string name="action_help">Help</string>
     <string name="intent_label">@string/app_name</string>
 
     <!-- Content Descriptions -->
@@ -13,6 +14,10 @@
     <!-- Dialog About -->
     <string name="dialog_about_text">Trip and Photo Tracker - Track your adventures!</string>
     <string name="dialog_about_ok">OK</string>
+
+    <!-- Dialog Help -->
+    <string name="dialog_help_title">Navigation Help</string>
+    <string name="dialog_help_ok">OK</string>
 
     <!-- Dialog Photo Delete -->
     <string name="dialog_photo_delete_title">Delete Photo</string>

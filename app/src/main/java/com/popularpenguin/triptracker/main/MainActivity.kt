@@ -1,4 +1,4 @@
-package com.popularpenguin.triptracker.common
+package com.popularpenguin.triptracker.main
 
 import android.os.Bundle
 import android.view.Menu
@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.popularpenguin.triptracker.R
+import com.popularpenguin.triptracker.common.PermissionValidator
+import com.popularpenguin.triptracker.common.ScreenNavigator
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -58,6 +60,16 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
+            R.id.action_help -> {
+                MaterialDialog(this).show {
+                    lifecycleOwner(this@MainActivity)
+                    message(R.string.dialog_help_title)
+                    cornerRadius(10f)
+                    positiveButton(R.string.dialog_help_ok)
+                }
+
+                true
+            }
             R.id.action_about -> {
                 MaterialDialog(this).show {
                     lifecycleOwner(this@MainActivity)

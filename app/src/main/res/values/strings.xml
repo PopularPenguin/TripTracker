@@ -12,7 +12,7 @@
     <string name="date_picker_title_end">Select the latest trip to load</string>
 
     <!-- Dialog About -->
-    <string name="dialog_about_text">Trip and Photo Tracker - Track your adventures!</string>
+    <string name="dialog_about_text">Trip and Photo Tracker - Track your adventures!\n\n\n&#169; 2020 Brian Niedzialkoski</string>
     <string name="dialog_about_ok">OK</string>
 
     <!-- Dialog Help -->

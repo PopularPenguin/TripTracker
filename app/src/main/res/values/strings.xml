@@ -17,6 +17,17 @@
 
     <!-- Dialog Help -->
     <string name="dialog_help_title">Navigation Help</string>
+    <string name="dialog_help_title_list">Trip List</string>
+    <string name="dialog_help_show">Show all trips</string>
+    <string name="dialog_help_search">Search trip title</string>
+    <string name="dialog_help_first">Select earliest trip</string>
+    <string name="dialog_help_second">Select latest trip</string>
+    <string name="dialog_help_start">Start trip</string>
+    <string name="dialog_help_title_map">Map</string>
+    <string name="dialog_help_zoom">Zoom map</string>
+    <string name="dialog_help_terrain">Switch map terrain</string>
+    <string name="dialog_help_camera">Take picture</string>
+    <string name="dialog_help_track">Start/Stop tracking</string>
     <string name="dialog_help_ok">OK</string>
 
     <!-- Dialog Photo Delete -->

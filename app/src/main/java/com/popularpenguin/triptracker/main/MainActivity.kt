@@ -4,8 +4,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.internal.main.DialogLayout
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
+import com.afollestad.materialdialogs.list.customListAdapter
 import com.popularpenguin.triptracker.R
 import com.popularpenguin.triptracker.common.PermissionValidator
 import com.popularpenguin.triptracker.common.ScreenNavigator
@@ -64,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                 MaterialDialog(this).show {
                     lifecycleOwner(this@MainActivity)
                     message(R.string.dialog_help_title)
+                    customListAdapter(HelpDialogAdapter(), LinearLayoutManager(context))
                     cornerRadius(10f)
                     positiveButton(R.string.dialog_help_ok)
                 }
@@ -73,7 +78,6 @@ class MainActivity : AppCompatActivity() {
             R.id.action_about -> {
                 MaterialDialog(this).show {
                     lifecycleOwner(this@MainActivity)
-
                     message(R.string.dialog_about_text)
                     cornerRadius(10f)
                     positiveButton(R.string.dialog_about_ok)

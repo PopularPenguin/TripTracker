@@ -24,7 +24,8 @@ class HelpDialogAdapter() :
         Pair(android.R.drawable.ic_menu_zoom, R.string.dialog_help_zoom),
         Pair(android.R.drawable.ic_menu_mapmode, R.string.dialog_help_terrain),
         Pair(android.R.drawable.ic_menu_camera, R.string.dialog_help_camera),
-        Pair(android.R.drawable.ic_media_play, R.string.dialog_help_track)
+        Pair(android.R.drawable.ic_media_play, R.string.dialog_help_track),
+        Pair(android.R.drawable.star_big_off, R.string.dialog_help_caption)
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DialogViewHolder {

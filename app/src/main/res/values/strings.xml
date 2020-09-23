@@ -28,6 +28,7 @@
     <string name="dialog_help_terrain">Switch map terrain</string>
     <string name="dialog_help_camera">Take picture</string>
     <string name="dialog_help_track">Start/Stop tracking</string>
+    <string name="dialog_help_caption">Set trip list photo</string>
     <string name="dialog_help_ok">OK</string>
 
     <!-- Dialog Photo Delete -->

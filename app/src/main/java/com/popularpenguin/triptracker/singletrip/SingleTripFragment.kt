@@ -130,7 +130,6 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                 }
 
                 // Add markers for the location of each photo taken
-                // TODO: Fix bug here; clicking photo marker returns last index for all markers
                 if (trip.uriList.isNotEmpty()) {
                     for ((index, latLng) in trip.photoMarkerList.withIndex()) {
                         val iconBitmap = IconGenerator(requireContext()).apply {
@@ -142,10 +141,11 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
                                 .position(latLng)
                                 .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
                         ).apply {
-                            tag = trip.uriList[index]
+                            tag = index
                             setOnMarkerClickListener {
                                 if (it.tag != null) {
-                                    onClick(index)
+                                    Log.d("SingleTripFragment", "TAG info: $tag")
+                                    onClick(it.tag as Int)
                                 }
 
                                 false
@@ -196,8 +196,6 @@ class SingleTripFragment : Fragment(), OnMapReadyCallback, PhotoAdapter.OnClick 
     }
 
     override fun onClick(position: Int) {
-        // TODO: Test index
-        Log.d(javaClass.simpleName, "Position is currently $position")
         ScreenNavigator(requireFragmentManager()).loadPhotoPager(trip.uid, position)
     }
 
